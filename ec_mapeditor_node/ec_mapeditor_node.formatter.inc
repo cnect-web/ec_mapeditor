@@ -41,18 +41,17 @@ function ec_mapeditor_node_field_formatter_info() {
 function ec_mapeditor_node_field_formatter_settings_form($field, $instance, $view_mode, $form, &$form_state) {
   $display = $instance['display'][$view_mode];
   $settings = $display['settings'];
-  $element = array();
 
   // Defines formatter settings form by using shared form elements.
-  if ($display['type'] == 'ec_webtools_map') {
-    $element['tiles'] = _ec_mapeditor_form_elements('tiles', $settings);
-    $element['height'] = _ec_mapeditor_form_elements('height', $settings);
-    $element['zoom'] = _ec_mapeditor_form_elements('zoom', $settings);
-    $element['icon'] = _ec_mapeditor_map_form_elements('icon', $settings);
-    $element['center'] = _ec_mapeditor_form_elements('center', $settings);
-    $element['attribution'] = _ec_mapeditor_form_elements('attribution', $settings);
-  }
-  return $element;
+  $elements = array(
+    'tiles',
+    'height',
+    'zoom',
+    'icon',
+    'center',
+    'attributions'
+  );
+  return _ec_mapeditor_custom_map_form_elements($elements, $settings);
 }
 
 /**
