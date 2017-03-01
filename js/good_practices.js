@@ -195,5 +195,15 @@ L.custom =
             }
         }).addTo(this.map);
         this.getData(layer.feature.properties.CNTR_ID);
-    }
+    },
+    mapEventTarget: function(country_name){
+       var country_code = this.getCountryInfo(country_name,2);
+       var self = this;
+       L.custom.map.eachLayer( function (e){
+           if (e.feature){
+               if (e.feature.properties.STAT_LEVL_ == 0 && e.feature.properties.CNTR_ID == country_code)
+                   self.zoomToFeature(e)
+           }
+       });
+   }
 }
