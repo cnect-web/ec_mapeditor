@@ -28,6 +28,8 @@ class MapController extends EntityAPIController {
    * Builds the content for displaying the map.
    */
   public function buildContent($entity, $view_mode = 'full', $langcode = NULL, $content = array()) {
+    
+    dsm($entity);
     $wrapper = entity_metadata_wrapper('map', $entity);
     $content['author'] = array('#markup' => t('Created by: !author', array('!author' => $wrapper->uid->name->value(array('sanitize' => TRUE)))));
 
