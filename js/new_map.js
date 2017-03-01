@@ -5,6 +5,38 @@ L.custom =
     layers: [],
     categoryLayers:[],
     checkboxes:null,
+    //source JSON URL
+    baseSourceURL: "http://s-cnect-w4y02.cnect.cec.eu.int/digital-agenda/platform/en/ec-mapeditor-data-",
+    countriesMapping:[
+        {isoCode: 'BE', name: 'belgium'},
+        {isoCode: 'BG', name: 'bulgaria'},
+        {isoCode: 'CZ', name: 'czech republic'},
+        {isoCode: 'DK', name: 'denmark'},
+        {isoCode: 'DE', name: 'germany'},
+        {isoCode: 'EE', name: 'estonia'},
+        {isoCode: 'IE', name: 'ireland'},
+        {isoCode: 'EL', name: 'greece'},
+        {isoCode: 'ES', name: 'spain'},
+        {isoCode: 'FR', name: 'france'},
+        {isoCode: 'HR', name: 'croatia'},
+        {isoCode: 'IT', name: 'italy'},
+        {isoCode: 'CY', name: 'cyprus'},
+        {isoCode: 'LV', name: 'latvia'},
+        {isoCode: 'LT', name: 'lithuania'},
+        {isoCode: 'LU', name: 'luxembourg'},
+        {isoCode: 'HU', name: 'hungary'},
+        {isoCode: 'MT', name: 'malta'},
+        {isoCode: 'NL', name: 'netherlands'},
+        {isoCode: 'AT', name: 'austria'},
+        {isoCode: 'PL', name: 'poland'},
+        {isoCode: 'PT', name: 'portugal'},
+        {isoCode: 'RO', name: 'romania'},
+        {isoCode: 'SI', name: 'slovenia'},
+        {isoCode: 'SK', name: 'slovakia'},
+        {isoCode: 'FI', name: 'finland'},
+        {isoCode: 'SE', name: 'sweden'},
+        {isoCode: 'UK', name: 'united-kingdom'}
+    ],
     //Categories 
     typeCategories: [ {"name":"winner", "color":"pink", label: "Award winners"}, {"name":"submitted", "color":"turquoise", label: "Award winners"}, {"name":"not-submitted", "color":"blue", label: "Award winners"}],
     countryNutsLayer: null,
@@ -145,10 +177,17 @@ L.custom =
 
         }
     },
+    getCountry: function(NUTid){
+        for (var country in this.countriesMapping){
+            if(this.countriesMapping[country].isoCode == NUTid)
+                return this.countriesMapping[country].name;
+        }
+    },
     getData:function(country_code){
         var self = this;
         var req = new XMLHttpRequest();
-        var url = "http://s-cnect-w4y02.cnect.cec.eu.int/digital-agenda/platform/en/ec-mapeditor-data-" + country_code;
+        var country = this.getCountry(country_code);
+        var url = this.baseSourceURL + country_code;
         req.open('GET', url, true);
         req.onreadystatechange = function (aEvt) {
             if (req.readyState == 4){
@@ -172,7 +211,6 @@ L.custom =
         };
         req.send(null);
     },
-
     addCategoryMarkersFromJson: function(json, country_code){
         var categories = this.typeCategories;
         var countryDataFeatures = json.features;
@@ -246,5 +284,5 @@ L.custom =
             }
         }).addTo(this.map);
         this.getData(layer.feature.properties.CNTR_ID);
-    }    
+    }
 }
