@@ -3,13 +3,10 @@ L.custom =
     map:null,
     features: [],
     layers: [],
-    categoryLayers:[],
+    pinLayers: null,
     checkboxes:null,
     //source JSON URL
-    baseSourceURL: "http://s-cnect-w4y02.cnect.cec.eu.int/digital-agenda/platform/en/ec-mapeditor-data-",
-    //country: document.location.href.split("/")[document.location.href.split("/").length-1],
-    country: "france",
-    country_code: "",
+    baseSourceURL: "good-practices-json/",    
     countriesMapping:[
         {isoCode: 'BE', name: 'belgium'},
         {isoCode: 'BG', name: 'bulgaria'},
@@ -112,18 +109,20 @@ L.custom =
         for (var country in this.countriesMapping){
             if(this.countriesMapping[country].isoCode == value && type == 1)
                 return this.countriesMapping[country].name;
-            if(this.countriesMapping[country].name.toLowerCase() == value.toLowerCase() && type == 2)
+            if(this.countriesMapping[country].name == value && type == 2)
                 return this.countriesMapping[country].isoCode;
         }
     },
-    getData:function(){
+    getData:function(country_id){
         var self = this;        
         var req = new XMLHttpRequest();
-        var url = this.baseSourceURL + this.country_code;
+        var country = this.getCountryInfo(country_id,1);   
+        var url = this.baseSourceURL + country;
         req.open('GET', url, true);
         req.onreadystatechange = function (aEvt) {
             if (req.readyState == 4){
                 if(req.status == 200){
+                    console.log(req.responseText);
                     var json = JSON.parse(req.responseText);
                     self.addMarkersFromJson(json);
                 } else{
@@ -132,6 +131,8 @@ L.custom =
             }
         };
         req.send(null);
+
+        //To upadate page put here
     },
     addMarkersFromJson: function(json){
         var countryDataFeatures = json.features;
@@ -153,13 +154,16 @@ L.custom =
         }; 
 
         var data = {"type":"FeatureCollection","features":catFeatures};
-        L.wt.markers(data,options).addTo(this.map);
+        if (this.pinLayers != null) 
+            this.map.removeLayer(this.pinLayers);
+        this.pinLayers = L.wt.markers(data,options);
+        this.pinLayers.addTo(this.map);
     },    
     //Check which country should zoom and load
     onEachNutsFeature:function(feature, layer){
-        if (layer.feature.properties.NUTS_ID == this.country_code){
-            this.zoomToFeature(layer)
-        }
+        layer.on("click", function(e){  
+            L.custom.zoomToFeature(e.target);
+        });
     },
     zoomToFeature:function(layer){
         if(!layer)
@@ -190,6 +194,6 @@ L.custom =
                 }
             }
         }).addTo(this.map);
-        this.getData();
+        this.getData(layer.feature.properties.CNTR_ID);
     }
 }
