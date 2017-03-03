@@ -194,6 +194,7 @@ L.custom =
             selcountries['FI'] = '74031';
             selcountries['SE'] = '74057';
             selcountries['UK'] = '74060';
+            selcountries['GB'] = '74060';
         
             window.location.href = '?field_bpcountry_tid=' + selcountries[layer.feature.properties.CNTR_ID];
              
