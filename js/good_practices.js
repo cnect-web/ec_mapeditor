@@ -161,8 +161,42 @@ L.custom =
     },    
     //Check which country should zoom and load
     onEachNutsFeature:function(feature, layer){
-        layer.on("click", function(e){  
-            L.custom.zoomToFeature(e.target);
+        layer.on("click", function(e){
+            
+            //L.custom.zoomToFeature(e.target);
+            
+            var selcountries = [];
+            selcountries['BE'] = '74023';
+            selcountries['BG'] = '74025';
+            selcountries['CZ'] = '74028';
+            selcountries['DK'] = '74029';
+            selcountries['DE'] = '74033';
+            selcountries['EE'] = '74030';
+            selcountries['IE'] = '74037';
+            selcountries['EL'] = '74034';
+            selcountries['ES'] = '74056';
+            selcountries['FR'] = '74032';
+            selcountries['HR'] = '74026';
+            selcountries['IT'] = '74038';
+            selcountries['CY'] = '74027';
+            selcountries['LV'] = '74039';
+            selcountries['LT'] = '74041';
+            selcountries['LU'] = '74042';
+            selcountries['HU'] = '74035';
+            selcountries['MT'] = '74043';
+            selcountries['NL'] = '74046';
+            selcountries['AT'] = '74021';
+            selcountries['PL'] = '74048';
+            selcountries['PT'] = '74049';
+            selcountries['RO'] = '74050';
+            selcountries['SI'] = '74055';
+            selcountries['SK'] = '74054';
+            selcountries['FI'] = '74031';
+            selcountries['SE'] = '74057';
+            selcountries['UK'] = '74060';
+        
+            window.location.href = '?field_bpcountry_tid=' + selcountries[layer.feature.properties.CNTR_ID];
+             
         });
     },
     zoomToFeature:function(layer){
