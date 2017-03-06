@@ -1,7 +1,8 @@
 (function ($) {
 
   $(document).ready(function() {
-    var country = $('#edit-field-bpcountry-tid :selected').text().toLowerCase();
+    var countryPre = $('#edit-field-bpcountry-tid :selected').text().toLowerCase();
+    var country = countryPre.replace(/\s/g, '-');
     var id = $('#edit-field-bpcountry-tid :selected').val();
 
     setTimeout(function() { 
