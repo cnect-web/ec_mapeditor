@@ -80,19 +80,20 @@ class MapController extends EntityAPIController {
       $custom_js[] = $map_layer_js;
     }
 
-    $ec_mapeditor_js = base_path() . drupal_get_path('module', 'ec_mapeditor') . "/js/map.js?v=" . rand(0, 33333);
-    $custom_js[] = $ec_mapeditor_js;
-
-    // Temporary customizations for DSM
+    // Customization for DSM Broadband Awards
     if ($entity->title == 'Broadband Awards') {
       $custom_js[] = base_path() . drupal_get_path('module', 'ec_mapeditor') . "/js/awards.js?v=" . rand(0, 33333);
     }
-    // Temporary customizations for DSM
+    // Customization for DSM Good Practices
     if ($entity->title == 'Good practice') {
       $custom_js[] = base_path() . drupal_get_path('module', 'ec_mapeditor') . "/js/good_practices.js?v=" . rand(0, 33333); 
-      $custom_js[] = base_path() . drupal_get_path('module', 'ec_mapeditor') . "/js/ec_mapeditor_custom.js?v=" . rand(33333, 55555); 
     }
-
+    // Default ec_mapeditor
+    else {
+      $ec_mapeditor_js = base_path() . drupal_get_path('module', 'ec_mapeditor') . "/js/map.js?v=" . rand(0, 33333);
+      $custom_js[] = $ec_mapeditor_js;
+    }
+    
     $map->setMoreCustomJs($custom_js);
     $content['map'] = $map->build;
     return parent::buildContent($entity, $view_mode, $langcode, $content);

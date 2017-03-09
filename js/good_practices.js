@@ -8,34 +8,34 @@ L.custom =
     //source JSON URL
     baseSourceURL: "good-practices-json/",    
     countriesMapping:[
-        {isoCode: 'BE', name: 'belgium'},
-        {isoCode: 'BG', name: 'bulgaria'},
-        {isoCode: 'CZ', name: 'czech republic'},
-        {isoCode: 'DK', name: 'denmark'},
-        {isoCode: 'DE', name: 'germany'},
-        {isoCode: 'EE', name: 'estonia'},
-        {isoCode: 'IE', name: 'ireland'},
-        {isoCode: 'EL', name: 'greece'},
-        {isoCode: 'ES', name: 'spain'},
-        {isoCode: 'FR', name: 'france'},
-        {isoCode: 'HR', name: 'croatia'},
-        {isoCode: 'IT', name: 'italy'},
-        {isoCode: 'CY', name: 'cyprus'},
-        {isoCode: 'LV', name: 'latvia'},
-        {isoCode: 'LT', name: 'lithuania'},
-        {isoCode: 'LU', name: 'luxembourg'},
-        {isoCode: 'HU', name: 'hungary'},
-        {isoCode: 'MT', name: 'malta'},
-        {isoCode: 'NL', name: 'netherlands'},
-        {isoCode: 'AT', name: 'austria'},
-        {isoCode: 'PL', name: 'poland'},
-        {isoCode: 'PT', name: 'portugal'},
-        {isoCode: 'RO', name: 'romania'},
-        {isoCode: 'SI', name: 'slovenia'},
-        {isoCode: 'SK', name: 'slovakia'},
-        {isoCode: 'FI', name: 'finland'},
-        {isoCode: 'SE', name: 'sweden'},
-        {isoCode: 'UK', name: 'united-kingdom'}
+        {ecwctid: '74023', isoCode: 'BE', name: 'belgium'},
+        {ecwctid: '74025', isoCode: 'BG', name: 'bulgaria'},
+        {ecwctid: '74028', isoCode: 'CZ', name: 'czech republic'},
+        {ecwctid: '74029', isoCode: 'DK', name: 'denmark'},
+        {ecwctid: '74033', isoCode: 'DE', name: 'germany'},
+        {ecwctid: '74030', isoCode: 'EE', name: 'estonia'},
+        {ecwctid: '74037', isoCode: 'IE', name: 'ireland'},
+        {ecwctid: '74034', isoCode: 'EL', name: 'greece'},
+        {ecwctid: '74056', isoCode: 'ES', name: 'spain'},
+        {ecwctid: '74032', isoCode: 'FR', name: 'france'},
+        {ecwctid: '74026', isoCode: 'HR', name: 'croatia'},
+        {ecwctid: '74038', isoCode: 'IT', name: 'italy'},
+        {ecwctid: '74027', isoCode: 'CY', name: 'cyprus'},
+        {ecwctid: '74039', isoCode: 'LV', name: 'latvia'},
+        {ecwctid: '74041', isoCode: 'LT', name: 'lithuania'},
+        {ecwctid: '74042', isoCode: 'LU', name: 'luxembourg'},
+        {ecwctid: '74035', isoCode: 'HU', name: 'hungary'},
+        {ecwctid: '74043', isoCode: 'MT', name: 'malta'},
+        {ecwctid: '74046', isoCode: 'NL', name: 'netherlands'},
+        {ecwctid: '74021', isoCode: 'AT', name: 'austria'},
+        {ecwctid: '74048', isoCode: 'PL', name: 'poland'},
+        {ecwctid: '74049', isoCode: 'PT', name: 'portugal'},
+        {ecwctid: '74050', isoCode: 'RO', name: 'romania'},
+        {ecwctid: '74055', isoCode: 'SI', name: 'slovenia'},
+        {ecwctid: '74054', isoCode: 'SK', name: 'slovakia'},
+        {ecwctid: '74031', isoCode: 'FI', name: 'finland'},
+        {ecwctid: '74057', isoCode: 'SE', name: 'sweden'},
+        {ecwctid: '74060', isoCode: 'UK', name: 'united-kingdom'}
     ],
     //Categories 
     typeCategories: [ {"name":"winner", "color":"pink", label: "Award winners"}, {"name":"submitted", "color":"turquoise", label: "Award winners"}, {"name":"not-submitted", "color":"blue", label: "Award winners"}],
@@ -122,8 +122,8 @@ L.custom =
         req.onreadystatechange = function (aEvt) {
             if (req.readyState == 4){
                 if(req.status == 200){
-                    console.log(req.responseText);
                     var json = JSON.parse(req.responseText);
+                    console.log(json);
                     self.addMarkersFromJson(json);
                 } else{
                     //handle error
@@ -161,11 +161,7 @@ L.custom =
     },    
     //Check which country should zoom and load
     onEachNutsFeature:function(feature, layer){
-        layer.on("click", function(e){
-            
-            //L.custom.zoomToFeature(e.target);
-            
-            var selcountries = [];
+        var selcountries = [];
             selcountries['BE'] = '74023';
             selcountries['BG'] = '74025';
             selcountries['CZ'] = '74028';
@@ -194,10 +190,12 @@ L.custom =
             selcountries['FI'] = '74031';
             selcountries['SE'] = '74057';
             selcountries['UK'] = '74060';
-            selcountries['GB'] = '74060';
-        
-            window.location.href = '?field_bpcountry_tid=' + selcountries[layer.feature.properties.CNTR_ID];
-             
+
+        layer.on("click", function(e){
+            var element = document.getElementById('edit-field-bpcountry-tid');
+            element.value = selcountries[layer.feature.properties.CNTR_ID];
+            L.custom.zoomToFeature(e.target);
+            Drupal.behaviors.ecmapeditor.triggerAjaxMapToView();
         });
     },
     zoomToFeature:function(layer){
