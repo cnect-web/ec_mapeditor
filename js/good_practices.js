@@ -8,34 +8,34 @@ L.custom =
     //source JSON URL
     baseSourceURL: "good-practices-json/",    
     countriesMapping:[
-        {ecwctid: '74023', isoCode: 'BE', name: 'belgium'},
-        {ecwctid: '74025', isoCode: 'BG', name: 'bulgaria'},
-        {ecwctid: '74028', isoCode: 'CZ', name: 'czech republic'},
-        {ecwctid: '74029', isoCode: 'DK', name: 'denmark'},
-        {ecwctid: '74033', isoCode: 'DE', name: 'germany'},
-        {ecwctid: '74030', isoCode: 'EE', name: 'estonia'},
-        {ecwctid: '74037', isoCode: 'IE', name: 'ireland'},
-        {ecwctid: '74034', isoCode: 'EL', name: 'greece'},
-        {ecwctid: '74056', isoCode: 'ES', name: 'spain'},
-        {ecwctid: '74032', isoCode: 'FR', name: 'france'},
-        {ecwctid: '74026', isoCode: 'HR', name: 'croatia'},
-        {ecwctid: '74038', isoCode: 'IT', name: 'italy'},
-        {ecwctid: '74027', isoCode: 'CY', name: 'cyprus'},
-        {ecwctid: '74039', isoCode: 'LV', name: 'latvia'},
-        {ecwctid: '74041', isoCode: 'LT', name: 'lithuania'},
-        {ecwctid: '74042', isoCode: 'LU', name: 'luxembourg'},
-        {ecwctid: '74035', isoCode: 'HU', name: 'hungary'},
-        {ecwctid: '74043', isoCode: 'MT', name: 'malta'},
-        {ecwctid: '74046', isoCode: 'NL', name: 'netherlands'},
-        {ecwctid: '74021', isoCode: 'AT', name: 'austria'},
-        {ecwctid: '74048', isoCode: 'PL', name: 'poland'},
-        {ecwctid: '74049', isoCode: 'PT', name: 'portugal'},
-        {ecwctid: '74050', isoCode: 'RO', name: 'romania'},
-        {ecwctid: '74055', isoCode: 'SI', name: 'slovenia'},
-        {ecwctid: '74054', isoCode: 'SK', name: 'slovakia'},
-        {ecwctid: '74031', isoCode: 'FI', name: 'finland'},
-        {ecwctid: '74057', isoCode: 'SE', name: 'sweden'},
-        {ecwctid: '74060', isoCode: 'UK', name: 'united-kingdom'}
+        {isoCode: 'BE', name: 'belgium', drupalid: '74023'},
+        {isoCode: 'BG', name: 'bulgaria', drupalid: '74025'},
+        {isoCode: 'CZ', name: 'czech republic', drupalid: '74028'},
+        {isoCode: 'DK', name: 'denmark', drupalid: '74029'},
+        {isoCode: 'DE', name: 'germany', drupalid: '74033'},
+        {isoCode: 'EE', name: 'estonia', drupalid: '74030'},
+        {isoCode: 'IE', name: 'ireland', drupalid: '74037'},
+        {isoCode: 'EL', name: 'greece', drupalid: '74034'},
+        {isoCode: 'ES', name: 'spain', drupalid: '74056'},
+        {isoCode: 'FR', name: 'france', drupalid: '74032'},
+        {isoCode: 'HR', name: 'croatia', drupalid: '74026'},
+        {isoCode: 'IT', name: 'italy', drupalid: '74038'},
+        {isoCode: 'CY', name: 'cyprus', drupalid: '74027'},
+        {isoCode: 'LV', name: 'latvia', drupalid: '74039'},
+        {isoCode: 'LT', name: 'lithuania', drupalid: '74041'},
+        {isoCode: 'LU', name: 'luxembourg', drupalid: '74042'},
+        {isoCode: 'HU', name: 'hungary', drupalid: '74035'},
+        {isoCode: 'MT', name: 'malta', drupalid: '74043'},
+        {isoCode: 'NL', name: 'netherlands', drupalid: '74046'},
+        {isoCode: 'AT', name: 'austria', drupalid: '74021'},
+        {isoCode: 'PL', name: 'poland', drupalid: '74048'},
+        {isoCode: 'PT', name: 'portugal', drupalid: '74049'},
+        {isoCode: 'RO', name: 'romania', drupalid: '74050'},
+        {isoCode: 'SI', name: 'slovenia', drupalid: '74055'},
+        {isoCode: 'SK', name: 'slovakia', drupalid: '74054'},
+        {isoCode: 'FI', name: 'finland', drupalid: '74031'},
+        {isoCode: 'SE', name: 'sweden', drupalid: '74057'},
+        {isoCode: 'UK', name: 'united-kingdom', drupalid: '74060'}
     ],
     //Categories 
     typeCategories: [ {"name":"winner", "color":"pink", label: "Award winners"}, {"name":"submitted", "color":"turquoise", label: "Award winners"}, {"name":"not-submitted", "color":"blue", label: "Award winners"}],
@@ -73,6 +73,7 @@ L.custom =
     }),
     init: function(obj, params){ 
         var self = this;
+        this.mapDomNode = $wt["map"].onRemove();
         //Create map
         this.map = L.map(obj, {
             "center": [48, 9], 
@@ -88,8 +89,7 @@ L.custom =
         L.wt.tileLayer().addTo(this.map);
         L.wt.tileLayer("graybg").addTo(this.map);
         this.countriesEU28.addTo(this.map);
-        this.country_code = this.getCountryInfo(this.country,2);
-        
+        this.country_code = this.getCountryInfo(this.country,2,1);
     },
     //Trigger actions after map as zoomed
     handleMapZoom: function(e) { 
@@ -104,26 +104,28 @@ L.custom =
         if(this.countryNutsLayer != null)
             this.countryNutsLayer.bringToFront();
     },    
-    //Get country name or iso code based in list above
-    getCountryInfo: function(value, type){
-        for (var country in this.countriesMapping){
-            if(this.countriesMapping[country].isoCode == value && type == 1)
-                return this.countriesMapping[country].name;
-            if(this.countriesMapping[country].name == value && type == 2)
-                return this.countriesMapping[country].isoCode;
+    //Get country name, iso code or drupal id based in list above
+    getCountryInfo: function(value, inType, outType){
+        for (var i in this.countriesMapping){
+            var country = this.countriesMapping[i];
+            if(country.isoCode == value && inType == 1)
+                return outType == 1 ? country.isoCode : outType == 2 ? country.name : country.drupalid;
+            if(country.name == value && inType == 2)
+                return outType == 1 ? country.isoCode : outType == 2 ? country.name : country.drupalid;
+            if(country.drupalid == value && inType == 3)
+                return outType == 1 ? country.isoCode : outType == 2 ? country.name : country.drupalid;
         }
     },
     getData:function(country_id){
         var self = this;        
         var req = new XMLHttpRequest();
-        var country = this.getCountryInfo(country_id,1);   
+        var country = this.getCountryInfo(country_id,1,2);   
         var url = this.baseSourceURL + country;
         req.open('GET', url, true);
         req.onreadystatechange = function (aEvt) {
             if (req.readyState == 4){
                 if(req.status == 200){
                     var json = JSON.parse(req.responseText);
-                    console.log(json);
                     self.addMarkersFromJson(json);
                 } else{
                     //handle error
@@ -161,39 +163,10 @@ L.custom =
     },    
     //Check which country should zoom and load
     onEachNutsFeature:function(feature, layer){
-        var selcountries = [];
-            selcountries['BE'] = '74023';
-            selcountries['BG'] = '74025';
-            selcountries['CZ'] = '74028';
-            selcountries['DK'] = '74029';
-            selcountries['DE'] = '74033';
-            selcountries['EE'] = '74030';
-            selcountries['IE'] = '74037';
-            selcountries['EL'] = '74034';
-            selcountries['ES'] = '74056';
-            selcountries['FR'] = '74032';
-            selcountries['HR'] = '74026';
-            selcountries['IT'] = '74038';
-            selcountries['CY'] = '74027';
-            selcountries['LV'] = '74039';
-            selcountries['LT'] = '74041';
-            selcountries['LU'] = '74042';
-            selcountries['HU'] = '74035';
-            selcountries['MT'] = '74043';
-            selcountries['NL'] = '74046';
-            selcountries['AT'] = '74021';
-            selcountries['PL'] = '74048';
-            selcountries['PT'] = '74049';
-            selcountries['RO'] = '74050';
-            selcountries['SI'] = '74055';
-            selcountries['SK'] = '74054';
-            selcountries['FI'] = '74031';
-            selcountries['SE'] = '74057';
-            selcountries['UK'] = '74060';
-
+        var self = this;
         layer.on("click", function(e){
             var element = document.getElementById('edit-field-bpcountry-tid');
-            element.value = selcountries[layer.feature.properties.CNTR_ID];
+            element.value = self.getCountryInfo(layer.feature.properties.CNTR_ID, 1, 3);
             L.custom.zoomToFeature(e.target);
             Drupal.behaviors.ecmapeditor.triggerAjaxMapToView();
         });
@@ -230,7 +203,7 @@ L.custom =
         this.getData(layer.feature.properties.CNTR_ID);
     },
     mapEventTarget: function(country_name){
-       var country_code = this.getCountryInfo(country_name,2);
+       var country_code = this.getCountryInfo(country_name,2,1);
        var self = this;
        L.custom.map.eachLayer( function (e){
            if (e.feature){
@@ -240,3 +213,4 @@ L.custom =
        });
    }
 }
+
