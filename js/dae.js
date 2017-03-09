@@ -9,6 +9,8 @@
 
   Drupal.behaviors.ecmapeditor.triggerAjaxMapToView = function(slector) {
 
+    e.preventDefault();
+
     var filter = $('#edit-field-bpcountry-tid :selected').val();
     
     if (filter != 'All') {
