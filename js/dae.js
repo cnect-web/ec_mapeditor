@@ -7,7 +7,7 @@
   
   Drupal.behaviors.ecmapeditor = {};
 
-  Drupal.behaviors.ecmapeditor.triggerAjaxMapToView = function(slector) {
+  Drupal.behaviors.ecmapeditor.triggerAjaxMapToView = function(e, slector) {
 
     e.preventDefault();
 
