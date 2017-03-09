@@ -7,16 +7,16 @@
   
   Drupal.behaviors.ecmapeditor = {};
 
-  Drupal.behaviors.ecmapeditor.triggerAjaxMapToView = function(e, slector) {
-
-    e.preventDefault();
+  Drupal.behaviors.ecmapeditor.triggerAjaxMapToView = function(slector) {
 
     var filter = $('#edit-field-bpcountry-tid :selected').val();
     
     if (filter != 'All') {
       $('#views-exposed-form-best-practices-page select[name="field_bpcountry_tid"]').trigger('change');
-      $('#views-exposed-form-best-practices-page button.form-submit').trigger('click'); 
+      $('#views-exposed-form-best-practices-page button.form-submit').trigger('click');
+      return false;
     }
+
   }
 
 
