@@ -1,16 +1,18 @@
 L.custom = 
 {
     map:null,
+    currentCountryID:null,
     features: [],
     layers: [],
     pinLayers: null,
     checkboxes:null,
+    loadingData : false,
     //source JSON URL
     baseSourceURL: "good-practices-json/",    
     countriesMapping:[
         {isoCode: 'BE', name: 'belgium', drupalid: '74023'},
         {isoCode: 'BG', name: 'bulgaria', drupalid: '74025'},
-        {isoCode: 'CZ', name: 'czech republic', drupalid: '74028'},
+        {isoCode: 'CZ', name: 'czech-republic', drupalid: '74028'},
         {isoCode: 'DK', name: 'denmark', drupalid: '74029'},
         {isoCode: 'DE', name: 'germany', drupalid: '74033'},
         {isoCode: 'EE', name: 'estonia', drupalid: '74030'},
@@ -64,7 +66,7 @@ L.custom =
                 color: "#0065B1",
                 dashArray: 0,
                 fillColor: "#C8E9F2",
-                fillOpacity: 0.9,
+                fillOpacity: 0,
                 opacity: 1,
                 smoothFactor: 1.5,
                 weight: 1
@@ -73,7 +75,6 @@ L.custom =
     }),
     init: function(obj, params){ 
         var self = this;
-        this.mapDomNode = $wt["map"].onRemove();
         //Create map
         this.map = L.map(obj, {
             "center": [48, 9], 
@@ -83,17 +84,20 @@ L.custom =
             "dragging": true,
             "touchZoom": true,
             "scrollWheelZoom": true
-        }).on("zoomend", function(e) {self.handleMapZoom(e)});
+        //handle layer visibility according to zoom level
+        }).on("zoomend", function(e) {self.handleMapZoom(e)})
+        //this is added here so that the new points are only displayed after zooom and pan has ended when zooming to country
+        .on("moveend", this.getData);
 
         //Add layers to the map: default (OSM), Gray background, EU28Countries
         L.wt.tileLayer().addTo(this.map);
         L.wt.tileLayer("graybg").addTo(this.map);
         this.countriesEU28.addTo(this.map);
-        this.country_code = this.getCountryInfo(this.country,2,1);
     },
     //Trigger actions after map as zoomed
     handleMapZoom: function(e) { 
-        if(e.target._zoom > 8 && !this.map.hasLayer(this.countriesOutsideEU28)){
+        //depending on zoom level, switch between layers
+        if(e.target._zoom > 8 && this.map.hasLayer(this.countriesEU28)){
             this.map.removeLayer(this.countriesEU28);
             this.countriesOutsideEU28.addTo(this.map);
         }else if(e.target._zoom <= 8 && this.map.hasLayer(this.countriesOutsideEU28)){
@@ -104,7 +108,7 @@ L.custom =
         if(this.countryNutsLayer != null)
             this.countryNutsLayer.bringToFront();
     },    
-    //Get country name, iso code or drupal id based in list above
+    //Get country name, iso code or drupal id based in the list above
     getCountryInfo: function(value, inType, outType){
         for (var i in this.countriesMapping){
             var country = this.countriesMapping[i];
@@ -116,26 +120,28 @@ L.custom =
                 return outType == 1 ? country.isoCode : outType == 2 ? country.name : country.drupalid;
         }
     },
-    getData:function(country_id){
-        var self = this;        
-        var req = new XMLHttpRequest();
-        var country = this.getCountryInfo(country_id,1,2);   
-        var url = this.baseSourceURL + country;
-        req.open('GET', url, true);
-        req.onreadystatechange = function (aEvt) {
-            if (req.readyState == 4){
-                if(req.status == 200){
-                    var json = JSON.parse(req.responseText);
-                    self.addMarkersFromJson(json);
-                } else{
-                    //handle error
+    //get data for country     
+    getData:function(){
+        var self = L.custom;
+        var country_id = self.currentCountryID;        
+        if (self.loadingData){
+            var req = new XMLHttpRequest();
+            var country = self.getCountryInfo(country_id,1,2);   
+            var url = self.baseSourceURL + country;
+            req.open('GET', url, true);
+            req.onreadystatechange = function (aEvt) {
+                if (req.readyState == 4){
+                    if(req.status == 200){                        
+                        var json = JSON.parse(req.responseText);
+                        self.addMarkersFromJson(json);
+                        self.loadingData = false;
+                    }
                 }
-            }
-        };
-        req.send(null);
-
-        //To upadate page put here
+            };
+            req.send(null);
+        }
     },
+    //Build feature object to add to the map
     addMarkersFromJson: function(json){
         var countryDataFeatures = json.features;
         var catFeatures = [];
@@ -155,30 +161,34 @@ L.custom =
             }
         }; 
 
-        var data = {"type":"FeatureCollection","features":catFeatures};
-        if (this.pinLayers != null) 
-            this.map.removeLayer(this.pinLayers);
+        var data = {"type":"FeatureCollection","features":catFeatures};        
         this.pinLayers = L.wt.markers(data,options);
         this.pinLayers.addTo(this.map);
     },    
     //Check which country should zoom and load
     onEachNutsFeature:function(feature, layer){
         var self = this;
-        layer.on("click", function(e){
+        layer.on("click", function(e){            
             var element = document.getElementById('edit-field-bpcountry-tid');
             element.value = self.getCountryInfo(layer.feature.properties.CNTR_ID, 1, 3);
             L.custom.zoomToFeature(e.target);
+            //trigger Drupal ajax call
             Drupal.behaviors.ecmapeditor.triggerAjaxMapToView();
         });
     },
+    //Zoom to country and add points
     zoomToFeature:function(layer){
+        var self = this;
+        this.currentCountryID = layer.feature.properties.CNTR_ID;
+        this.loadingData = true;
         if(!layer)
-            return;
-
+            return; 
+        if (this.pinLayers != null) 
+            this.map.removeLayer(self.pinLayers);
         // Resolve the bug for not displaying dom tom of France
         if(layer.feature.properties.CNTR_ID == "FR"){
             var currentZoom =  this.map.getZoom();
-            this.map.setView([47,3], 6);
+            this.map.setView([47,3], 5);
         }else{
             this.map.fitBounds(layer.getBounds());
         }
@@ -186,7 +196,7 @@ L.custom =
         if(this.countryNutsLayer != null)
             this.map.removeLayer(this.countryNutsLayer)
 
-        this.countryNutsLayer = L.wt.countries([{"level":2,"countries":[layer.feature.properties.CNTR_ID]}],{
+        this.countryNutsLayer = L.wt.countries([{"level":0,"countries":[layer.feature.properties.CNTR_ID]}],{
             insets :false,
             style: function(feature){
                 return {
@@ -196,21 +206,22 @@ L.custom =
                     fillOpacity: 0,
                     opacity: 1,
                     smoothFactor: 1.5,
-                    weight: 3
+                    weight: 2.5
                 }
             }
         }).addTo(this.map);
-        this.getData(layer.feature.properties.CNTR_ID);
     },
-    mapEventTarget: function(country_name){
-       var country_code = this.getCountryInfo(country_name,2,1);
-       var self = this;
-       L.custom.map.eachLayer( function (e){
-           if (e.feature){
-               if (e.feature.properties.STAT_LEVL_ == 0 && e.feature.properties.CNTR_ID == country_code)
-                   self.zoomToFeature(e)
-           }
-       });
+    mapEventTarget: function(country_name){        
+        if (!this.loadingData){
+            var country_code = this.getCountryInfo(country_name,2,1);
+            var self = this;
+            L.custom.map.eachLayer( function (e){
+                if (e.feature){
+                    if (e.feature.properties.STAT_LEVL_ == 0 && e.feature.properties.CNTR_ID == country_code)
+                        self.zoomToFeature(e)
+               }
+           });
+       }
    }
 }
 
