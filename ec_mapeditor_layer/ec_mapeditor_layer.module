@@ -135,7 +135,7 @@ function ec_mapeditor_layer_menu() {
     'title arguments' => array($map_layer_uri_argument_position),
     'page callback' => 'drupal_get_form',
     'page arguments' => array(
-      'map_layer_delete_form',
+      'ec_mapeditor_layer_delete_form',
       $map_layer_uri_argument_position,
     ),
     'access callback' => 'entity_access',
