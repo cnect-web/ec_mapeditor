@@ -94,17 +94,6 @@ function ec_mapeditor_layer_entity_info_alter(&$entity_info) {
 function ec_mapeditor_layer_menu() {
   $items = array();
 
-  // Sets menu item to add map layer.
-  $items['admin/structure/map-layer/add'] = array(
-    'title' => 'Add map layer',
-    'page callback' => 'ec_mapeditor_layer_admin_add_page',
-    'access arguments' => array('administer map_layer entities'),
-    'file' => 'ec_mapeditor_layer.admin.inc',
-    'type' => MENU_LOCAL_ACTION,
-    'tab_parent' => 'admin/structure/map-layer',
-    'tab_root' => 'admin/structure/map-layer',
-  );
-
   // Sets base menu item for map layer.
   $map_layer_uri = 'map-layer/%map_layer';
   $map_layer_uri_argument_position = 1;
@@ -165,18 +154,6 @@ function ec_mapeditor_layer_menu() {
     'type' => MENU_LOCAL_TASK,
     'context' => MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE,
   );
-
-  // Sets menu item to add map layer *type*.
-  foreach (ec_mapeditor_layer_types() as $type => $info) {
-    $items['admin/structure/map-layer/add/' . $type] = array(
-      'title' => 'Add map layer',
-      'page callback' => 'ec_mapeditor_layer_add',
-      'page arguments' => array(4),
-      'access callback' => 'entity_access',
-      'access arguments' => array('create', 'map_layer', $type),
-      'file' => 'ec_mapeditor_layer.admin.inc',
-    );
-  }
 
   // Sets menu item to delete map layer type.
   $items['admin/structure/map-layer-types/%map_layer_type/delete'] = array(
