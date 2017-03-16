@@ -63,5 +63,5 @@ function ec_mapeditor_delete_form_submit($form, &$form_state) {
   $map = $form_state['map'];
   _ec_mapeditor_delete_map($map);
   drupal_set_message(t('Map %title deleted.', array('%title' => entity_label('map', $map))));
-  $form_state['redirect'] = '<front>';
+  $form_state['redirect'] = 'admin/structure/maps';
 }

@@ -155,5 +155,5 @@ function ec_mapeditor_layer_delete_form_submit($form, &$form_state) {
   $map_layer = $form_state['map_layer'];
   ec_mapeditor_layer_delete($map_layer);
   drupal_set_message(t('Map layer %title deleted.', array('%title' => entity_label('map_layer', $map_layer))));
-  $form_state['redirect'] = '<front>';
+  $form_state['redirect'] = 'admin/structure/map-layer';
 }
