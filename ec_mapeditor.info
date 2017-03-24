@@ -5,6 +5,7 @@ dependencies[] = entity
 dependencies[] = ec_mapeditor_layer
 dependencies[] = views
 dependencies[] = inline_entity_form
+dependencies[] = entity_reference_url
 dependencies[] = entityreference
 files[] = ec_mapeditor.controller.inc
 scripts[] = js/dae.js
