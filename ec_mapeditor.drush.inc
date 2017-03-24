@@ -5,8 +5,6 @@
  * Provides custom drush command to import data.
  */
 
-module_load_include('inc', 'ec_mapeditor', 'ec_mapeditor_dsm.data');
-
 /**
  * Implements hook_drush_command().
  */
@@ -22,6 +20,8 @@ function ec_mapeditor_drush_command() {
  * Maps-import (ecmi) drush command.
  */
 function drush_ec_mapeditor_maps_import() {
+
+  require_once 'ec_mapeditor_dsm.data.inc';
 
   $tables = _ec_mapeditor_dsm_set_data();
   $tables_to_check = array(
