@@ -49,7 +49,7 @@ function ec_mapeditor_node_field_formatter_settings_form($field, $instance, $vie
     'zoom',
     'icon',
     'center',
-    'attributions'
+    'attributions',
   );
   return _ec_mapeditor_custom_map_form_elements($elements, $settings);
 }

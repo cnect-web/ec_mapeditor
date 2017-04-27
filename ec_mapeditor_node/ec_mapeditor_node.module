@@ -231,7 +231,7 @@ function _ec_mapeditor_node_fetch_nodes($filters) {
     return $nodes;
   }
   else {
-    drupal_set_message('Not enough information to build map.', 'error');
+    drupal_set_message(t('Not enough information to build map.'), 'error');
   }
 }
 

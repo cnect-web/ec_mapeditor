@@ -3,6 +3,6 @@ description = Provides a map layer bundle to store and display country outlines 
 core = 7.x
 dependencies[] = ec_mapeditor
 dependencies[] = text
-multisite_version = 2.1
+multisite_version = 2.2
 package = Maps
 php = 5.2.4

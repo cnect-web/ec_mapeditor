@@ -124,7 +124,6 @@ function _ec_mapeditor_csv_create_field() {
  * Changes map layer field.
  */
 function ec_mapeditor_csv_update_7001() {
-
   // Changes map layer field.
   _ec_mapeditor_csv_change_map_layers_field();
 }

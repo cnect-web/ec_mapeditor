@@ -242,10 +242,6 @@ function ec_mapeditor_layer_entity_property_info_alter(&$info) {
   );
 }
 
-/*******************************************************************************
- ********************************* Map layer API's *****************************
- ******************************************************************************/
-
 /**
  * Access callback for map layer.
  */
@@ -296,10 +292,6 @@ function ec_mapeditor_layer_delete($map_layer) {
 function ec_mapeditor_layer_delete_multiple($map_layer_ids) {
   entity_delete_multiple('map_layer', $map_layer_ids);
 }
-
-/*******************************************************************************
- ****************************** Map layer type API's ***************************
- ******************************************************************************/
 
 /**
  * Access callback for map layer type.
@@ -399,7 +391,7 @@ function _ec_mapeditor_layer_fieldcheck($field, $wrapper) {
  *   A string that can be used as ID ;).
  */
 function _ec_mapeditor_layer_id($string) {
-  return strtolower(preg_replace('/[^a-zA-Z0-9-]+/', '-', $string));
+  return drupal_strtolower(preg_replace('/[^a-zA-Z0-9-]+/', '-', $string));
 }
 
 /**
@@ -428,6 +420,7 @@ function ec_mapeditor_layer_inline_entity_form_entity_form_alter(&$entity_form, 
  * Class providing JavaScript settings for a map layer.
  */
 class MapLayerSettings {
+
   /**
    * Defines list of default settings.
    */
@@ -513,10 +506,14 @@ function ec_mapeditor_layer_admin_paths() {
 
 /**
  * Map layer view callback.
+ *
+ * @param array $map_layer
+ *   Map_layer entity object.
  */
 function ec_mapeditor_layer_view($map_layer) {
   drupal_set_title(entity_label('map_layer', $map_layer));
-  return entity_view('map_layer', array(entity_id('map_layer', $map_layer) => $map_layer), 'default');
+  $view = entity_view('map_layer', array(entity_id('map_layer', $map_layer) => $map_layer), 'default');
+  return $view;
 }
 
 /**

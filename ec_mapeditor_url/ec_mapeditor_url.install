@@ -5,10 +5,9 @@
  */
 
 /**
- * Implements hook_instal().
+ * Implements hook_install().
  */
 function ec_mapeditor_url_install() {
-
   // Creates the URL map layer.
   _ec_mapeditor_url_create_layer();
 

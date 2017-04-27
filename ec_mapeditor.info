@@ -5,12 +5,10 @@ dependencies[] = entity
 dependencies[] = ec_mapeditor_layer
 dependencies[] = views
 dependencies[] = inline_entity_form
-dependencies[] = entity_reference_url
 dependencies[] = entityreference
 files[] = ec_mapeditor.controller.inc
 scripts[] = js/dae.js
-project path = profiles/common/modules/features/ec_mapeditor
-multisite_version = 2.1
+multisite_version = 2.2
 package = Maps
 php = 5.2.4
 
