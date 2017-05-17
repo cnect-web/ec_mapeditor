@@ -29,8 +29,7 @@ class MapController extends EntityAPIController {
    */
   public function buildContent($entity, $view_mode = 'full', $langcode = NULL, $content = array()) {
     $wrapper = entity_metadata_wrapper('map', $entity);
-    $content['author'] = array('#markup' => t('Created by: !author', array('!author' => $wrapper->uid->name->value(array('sanitize' => TRUE)))));
-
+    
     // Sets defaults for theming properties like fields.
     $field_defaults = array(
       '#theme' => 'field',
@@ -60,6 +59,9 @@ class MapController extends EntityAPIController {
 
     // @todo prevent this.
     $settings = $settings->settings;
+    if ($settings['show_author']) {
+      $content['author'] = array('#markup' => t('Created by: !author', array('!author' => $wrapper->uid->name->value(array('sanitize' => TRUE)))));
+    }
 
     // Creates the render array for the map.
     $map = new MapBuild($settings);
@@ -80,19 +82,26 @@ class MapController extends EntityAPIController {
       $custom_js[] = $map_layer_js;
     }
 
-    $ec_mapeditor_js = base_path() . drupal_get_path('module', 'ec_mapeditor') . "/js/map.js?v=" . rand(0, 33333);
-    $custom_js[] = $ec_mapeditor_js;
-
-    // Customization for DSM Good Practices.
-    $gp_title = drupal_strtolower($entity->title);
-    if ($gp_title == 'good practice') {
-      $custom_js[] = base_path() . drupal_get_path('module', 'ec_mapeditor') . "/js/good_practices.js?v=" . rand(0, 33333);
+    if (module_exists('ec_mapeditor_target') && $this->checkTargetLayerEntity($entity)) {
+      $map_layer_js = base_path() . drupal_get_path('module', 'ec_mapeditor_target') . "/js/map.js?v=" . rand(0, 33333);
+      $custom_js[] = $map_layer_js;
+    } else {
+      $ec_mapeditor_js = base_path() . drupal_get_path('module', 'ec_mapeditor') . "/js/map.js?v=" . rand(0, 33333);
+      $custom_js[] = $ec_mapeditor_js;
     }
+
     $map->setMoreCustomJs($custom_js);
     $content['map'] = $map->build;
     return parent::buildContent($entity, $view_mode, $langcode, $content);
   }
 
+  private function checkTargetLayerEntity($entity) {
+    foreach($entity->map_layers['und'] as $key=>$val) {
+      if($val['entity']->type == 'target_layer') {
+        return TRUE;
+      }
+    }
+  }
 }
 
 /**
@@ -172,7 +181,7 @@ class MapBuild {
   /**
    * Sets filename of custom JavaScript to be passed to load.js.
    *
-   * @ todo. synch with setMoreCustomJs. Check if still in use.
+   * @todo. synch with setMoreCustomJs. Check if still in use.
    */
   public function setCustomJs($custom_js) {
     $this->customJs = $custom_js;

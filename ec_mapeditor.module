@@ -408,6 +408,17 @@ function ec_mapeditor_map_form_elements() {
         '#size' => 80,
       ),
     ),
+
+    // Defines form element to control disclaimer.
+    'disclaimer' => array(
+      '#type' => 'fieldset',
+      '#title' => t('Disclaimer'),
+      '#weight' => 17,
+      'disclaimerControl' => array(
+        '#type' => 'checkbox',
+        '#title' => t('HIde disclaimer'),
+      ),
+    ),
   );
   return $form_elements;
 }
@@ -478,6 +489,7 @@ function _ec_mapeditor_save_map($map) {
       'attributionControl' => $map->attributionControl,
       'attribution' => $map->attribution,
     ),
+    'show_author' => $map->show_author,
     'show_settings' => $map->show_settings,
   );
   $map->settings = drupal_json_encode($settings);
@@ -522,6 +534,7 @@ class MapSettings {
       'icon' => array(
         'icon' => 'blue',
       ),
+      'show_author' => FALSE,
       'show_settings' => FALSE,
     );
   }

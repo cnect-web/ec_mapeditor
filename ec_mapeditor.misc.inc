@@ -45,6 +45,13 @@ function map_form($form, &$form_state, $map) {
   // @todo. how to prevent this?
   $settings = $settings->settings;
 
+  // Provides a checkbox to show /hide Author.
+  $form['show_author'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Show Author'),
+    '#default_value' => $settings['show_author'],
+    '#weight' => 97,
+  );
   // Provides a checkbox to show /hide settings field.
   $form['show_settings'] = array(
     '#type' => 'checkbox',
