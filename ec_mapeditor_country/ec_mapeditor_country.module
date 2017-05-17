@@ -10,7 +10,6 @@
  * See MapLayerController->buildContent();
  */
 function ec_mapeditor_country_layer_content_alter(&$content, $wrapper, $entity) {
-
   // Fetches map data from country layer.
   if ($entity->type == 'country_layer') {
     $settings = drupal_json_decode($wrapper->settings->value());
@@ -62,7 +61,7 @@ function _ec_mapeditor_country_csv_countries($data) {
     }
   }
   foreach ($csv_data as $item) {
-    $code = strtoupper($item[0]);
+    $code = drupal_strtoupper($item[0]);
     $countries[$code] = array(
       'name' => isset($item[1]) ? check_plain($item[1]) : NULL,
       'url' => isset($item[2]) ? trim($item[2]) : NULL,

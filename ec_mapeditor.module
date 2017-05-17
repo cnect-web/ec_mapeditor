@@ -186,12 +186,18 @@ function ec_mapeditor_entity_property_info_alter(&$info) {
   );
 }
 
-/*******************************************************************************
- ********************************* Map API's **********************************
- ******************************************************************************/
-
 /**
  * Access callback for map.
+ *
+ * @param string $op
+ *   Operation being performed.
+ * @param object $map
+ *   Map entity object.
+ * @param string $account
+ *   The account to check.
+ *
+ * @return bool
+ *   Boolean TRUE if user has requested permission.
  */
 function ec_mapeditor_access($op, $map, $account = NULL, $entity_type = NULL) {
   global $user;
@@ -217,6 +223,14 @@ function ec_mapeditor_access($op, $map, $account = NULL, $entity_type = NULL) {
 
 /**
  * Loads a map.
+ *
+ * @param int $mid
+ *   The map entity ID.
+ * @param bool $reset
+ *   Reset the internal cache for the requested entity type.
+ *
+ * @return array
+ *   The firs map entity object stored in the Array returned by entity_load().
  */
 function ec_mapeditor_load($mid, $reset = FALSE) {
   $maps = ec_mapeditor_load_multiple(array($mid), array(), $reset);
@@ -225,6 +239,16 @@ function ec_mapeditor_load($mid, $reset = FALSE) {
 
 /**
  * Loads multiple maps based on certain conditions.
+ *
+ * @param array $mids
+ *   Array with map entity IDs.
+ * @param array $conditions
+ *   Associative Array of conditions on the base table.
+ * @param bool $reset
+ *   Reset the internal cache for the requested entity type.
+ *
+ * @return array
+ *   Array of entity objects indexed by their ids (see entity_load()).
  */
 function ec_mapeditor_load_multiple($mids = array(), $conditions = array(), $reset = FALSE) {
   return entity_load('map', $mids, $conditions, $reset);
@@ -232,6 +256,9 @@ function ec_mapeditor_load_multiple($mids = array(), $conditions = array(), $res
 
 /**
  * Deletes single map.
+ *
+ * @param object $map
+ *   The map entity object to delete.
  */
 function _ec_mapeditor_delete_map($map) {
   entity_delete('map', entity_id('map', $map));
@@ -239,6 +266,9 @@ function _ec_mapeditor_delete_map($map) {
 
 /**
  * Deletes multiple maps.
+ *
+ * @param object $map_ids
+ *   IDs of the map entities to delete.
  */
 function ec_mapeditor_delete_map_multiple($map_ids) {
   entity_delete_multiple('map', $map_ids);
@@ -450,7 +480,7 @@ function _ec_mapeditor_save_map($map) {
     ),
     'show_settings' => $map->show_settings,
   );
-  $map->settings = json_encode($settings);
+  $map->settings = drupal_json_encode($settings);
   $map->changed = REQUEST_TIME;
   entity_save('map', $map);
 }

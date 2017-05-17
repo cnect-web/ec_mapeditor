@@ -83,11 +83,11 @@ class MapController extends EntityAPIController {
     $ec_mapeditor_js = base_path() . drupal_get_path('module', 'ec_mapeditor') . "/js/map.js?v=" . rand(0, 33333);
     $custom_js[] = $ec_mapeditor_js;
 
-    // Customization for DSM Good Practices
-    if (strtolower($entity->title) == 'good practice') {
-      $custom_js[] = base_path() . drupal_get_path('module', 'ec_mapeditor') . "/js/good_practices.js?v=" . rand(0, 33333); 
+    // Customization for DSM Good Practices.
+    $gp_title = drupal_strtolower($entity->title);
+    if ($gp_title == 'good practice') {
+      $custom_js[] = base_path() . drupal_get_path('module', 'ec_mapeditor') . "/js/good_practices.js?v=" . rand(0, 33333);
     }
-    
     $map->setMoreCustomJs($custom_js);
     $content['map'] = $map->build;
     return parent::buildContent($entity, $view_mode, $langcode, $content);

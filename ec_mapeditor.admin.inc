@@ -6,6 +6,9 @@
 
 /**
  * Add new map page callback.
+ *
+ * @return Map Form
+ *   It creates new map entity.
  */
 function ec_mapeditor_add_map() {
   $map = entity_create('map', array('type' => 'map'));
@@ -16,6 +19,11 @@ function ec_mapeditor_add_map() {
 
 /**
  * Handles map form submission.
+ *
+ * @param array $form
+ *   Provides form values to update form_state.
+ * @param array $form_state
+ *   Form state of the entity that must be updated.
  */
 function ec_mapeditor_form_submit($form, &$form_state) {
   $map = $form_state['map'];
@@ -37,6 +45,16 @@ function ec_mapeditor_form_submit_delete($form, &$form_state) {
 
 /**
  * Defines deletion confirmation form.
+ *
+ * @param array $form
+ *   Provides form values to update form_state.
+ * @param array $form_state
+ *   Form state of the entity that must be updated.
+ * @param object $map
+ *   Map Entity object.
+ *
+ * @return The form array
+ *   Form to delete the map.
  */
 function ec_mapeditor_delete_form($form, &$form_state, $map) {
   $form_state['map'] = $map;
@@ -58,6 +76,11 @@ function ec_mapeditor_delete_form($form, &$form_state, $map) {
 
 /**
  * Handles deletion form submit.
+ *
+ * @param array $form
+ *   Provides form values to update form_state.
+ * @param array $form_state
+ *   Form state of the entity that must be updated.
  */
 function ec_mapeditor_delete_form_submit($form, &$form_state) {
   $map = $form_state['map'];
