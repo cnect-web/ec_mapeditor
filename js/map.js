@@ -34,6 +34,11 @@ L.custom = {
       options.attribution = settings.attribution.attribution;
     }
 
+    // Hide Show disclaimer of the map.
+    if (settings.show_disclaimer == '0') {
+      document.getElementById('leaflet-disclaimer').style.display = 'none';
+    }
+
     var tiles = L.wt.tileLayer(settings.tiles.tiles, options).addTo(map);
 
     // Defines custom Icon.
