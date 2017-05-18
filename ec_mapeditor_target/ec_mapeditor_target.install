@@ -1,0 +1,343 @@
+<?php
+/**
+ * @file
+ * Installation and schema for target_layer.module
+ */
+
+/**
+ * Implements hook_install().
+ */
+function ec_mapeditor_target_install() {
+  // Create target map layer.
+  _ec_mapeditor_target_create_target_layer();
+
+  // Add URL field to target map layer.
+  _ec_mapeditor_target_create_map_target_url_field();
+
+  // Add countries field to target map layer.
+  _ec_mapeditor_target_create_map_target_countries_field();
+
+  // Add views interactive field to target map layer.
+  _ec_mapeditor_target_create_map_views_interactive_field();
+
+  // Changes map layers field to add target layer as target bundle.
+  _ec_mapeditor_target_change_map_layers_field();
+}
+
+/**
+ * Creates the target layer bundle.
+ */
+function _ec_mapeditor_target_create_target_layer() {
+  $bundle = new stdClass();
+  $bundle->type = 'target_layer';
+  $bundle->label = t('Target layer');
+  $bundle->is_new = TRUE;
+  $bundle->description = t("Map layer with zoom effect.");
+  $controller = new MapLayerTypeController('map_layer_type');
+  $controller->save($bundle);
+}
+
+/**
+ * Defines and creates map target url field.
+ *
+ * Creates single textfield for url to json object.
+ */
+function _ec_mapeditor_target_create_map_target_url_field() {
+  if (field_info_field('map_target_url')) {
+    watchdog('target_layer', 'Field Map Target URL not created because it exists already', array(), WATCHDOG_NOTICE, NULL);
+  }
+  else {
+    $array_fields = array(
+      'map_target_url' => array(
+        'active' => 1,
+        'cardinality' => -1,
+        'deleted' => 0,
+        'entity_types' => array(),
+        'indexes' => array(),
+        'locked' => 1,
+        'module' => 'link',
+        'settings' => array(
+          'attributes' => array(
+            'class' => '',
+            'rel' => '',
+            'target' => 'default',
+          ),
+          'display' => array(
+            'url_cutoff' => 80,
+          ),
+          'enable_tokens' => 1,
+          'title' => 'optional',
+          'title_maxlength' => 128,
+          'title_value' => '',
+          'url' => 0,
+        ),
+        'translatable' => 0,
+        'type' => 'link_field',
+        'field_name' => 'map_target_url',
+      ),
+    );
+    foreach ($array_fields as $field) {
+      field_create_field($field);
+    }
+  }
+
+  // Defines the Map URL field for the CSV map layer bundle.
+  $t = get_t();
+  $array_instances = array(
+    'map_target_url' => array(
+      'entity_type' => 'map_layer',
+      'bundle' => 'target_layer',
+      'default_value' => NULL,
+      'deleted' => 0,
+      'display' => array(
+        'default' => array(
+          'label' => 'above',
+          'settings' => array(),
+          'type' => 'hidden',
+          'weight' => 0,
+        ),
+        'map_layer' => array(
+          'label' => 'above',
+          'settings' => array(),
+          'type' => 'hidden',
+          'weight' => 0,
+        ),
+      ),
+      'field_name' => 'map_target_url',
+      'label' => $t('URL'),
+      'description' => 'URL where to find map data. You can link to json files. The URLs must be publicly accessible.',
+      'required' => 0,
+      'settings' => array(
+        'absolute_url' => 1,
+        'attributes' => array(
+          'class' => '',
+          'configurable_class' => 0,
+          'configurable_title' => 0,
+          'rel' => '',
+          'target' => 'default',
+          'title' => '',
+        ),
+        'display' => array(
+          'url_cutoff' => 80,
+        ),
+        'enable_tokens' => 1,
+        'rel_remove' => 'default',
+        'title' => 'none',
+        'title_label_use_field_label' => 0,
+        'title_maxlength' => 128,
+        'title_value' => '',
+        'url' => 0,
+        'user_register_form' => FALSE,
+        'validate_url' => 1,
+      ),
+      'widget' => array(
+        'active' => 0,
+        'module' => 'link',
+        'settings' => array(),
+        'type' => 'link_field',
+        'weight' => 4,
+      ),
+    ),
+  );
+  foreach ($array_instances as $instance) {
+    field_create_instance($instance);
+  }
+}
+
+/**
+ * Defines and creates map target countries field.
+ *
+ * Creates single textarea for list of countries to enable on the layer.
+ */
+function _ec_mapeditor_target_create_map_target_countries_field() {
+  if (field_info_field('map_target_countries')) {
+    watchdog('target_layer', 'Field Map target countries not created because it exists already', array(), WATCHDOG_NOTICE, NULL);
+  }
+  else {
+    $array_fields = array(
+      'map_target_countries' => array(
+        'active' => 1,
+        'cardinality' => 1,
+        'deleted' => 0,
+        'entity_types' => array(),
+        'indexes' => array(
+          'format' => array(
+            0 => 'format',
+          ),
+        ),
+        'locked' => 1,
+        'module' => 'text',
+        'settings' => array(),
+        'translatable' => 0,
+        'field_name' => 'map_target_countries',
+        'translatable' => 0,
+        'type' => 'text_long',
+      ),
+    );
+    foreach ($array_fields as $field) {
+      field_create_field($field);
+    }
+  }
+
+  // Defines the map country field for the country layer bundle. Creates
+  // multiple line textarea field for CSV data.
+  $t = get_t();
+  $array_instances = array(
+    'map_target_countries' => array(
+      'field_name' => 'map_target_countries',
+      'label' => $t('Countries data'),
+      'settings' => array(
+        'text_processing' => 0,
+        'user_register_form' => FALSE,
+      ),
+      'widget' => array(
+        'active' => 1,
+        'module' => 'text',
+        'settings' => array(
+          'rows' => 12,
+        ),
+        'type' => 'text_textarea',
+        'weight' => 3,
+      ),
+      'display' => array(
+        'default' => array(
+          'label' => 'above',
+          'module' => 'text',
+          'settings' => array(),
+          'type' => 'text_default',
+          'weight' => 11,
+        ),
+        'map_layer' => array(
+          'label' => 'above',
+          'module' => 'text',
+          'settings' => array(),
+          'type' => 'hidden',
+          'weight' => 11,
+        ),
+      ),
+      'entity_type' => 'map_layer',
+      'bundle' => 'target_layer',
+      'default_value' => NULL,
+      'deleted' => 0,
+      'description' => t('Countries to enable on the map with zoom effect. Enter comma separated values (CSV) in this format: isoCode, name, termID.'),
+    ),
+  );
+  foreach ($array_instances as $instance) {
+    field_create_instance($instance);
+  }
+}
+
+/**
+ * Defines and create view field definition field.
+ *
+ * Creates single textfield to define the interactive views field.
+ */
+function _ec_mapeditor_target_create_map_views_interactive_field() {
+  if (field_info_field('map_views_interactive')) {
+    watchdog('target_layer', 'Field Map views interactive not created because it exists already', array(), WATCHDOG_NOTICE, NULL);
+  }
+  else {
+    $array_fields = array(
+      'map_views_interactive' => array(
+        'active' => 1,
+        'cardinality' => 1,
+        'deleted' => 0,
+        'entity_types' => array(),
+        'indexes' => array(
+          'format' => array(
+            0 => 'format',
+          ),
+        ),
+        'locked' => 1,
+        'module' => 'text',
+        'settings' => array(),
+        'translatable' => 0,
+        'field_name' => 'map_views_interactive',
+        'translatable' => 0,
+        'type' => 'text',
+      ),
+    );
+    foreach ($array_fields as $field) {
+      field_create_field($field);
+    }
+  }
+
+  // Defines the map country list field for the country layer bundle.
+  $t = get_t();
+  $array_instances = array(
+    'map_views_interactive' => array(
+      'field_name' => 'map_views_interactive',
+      'label' => $t('Views field definitions'),
+      'settings' => array(
+        'text_processing' => 0,
+        'user_register_form' => FALSE,
+      ),
+      'widget' => array(
+        'active' => 1,
+        'module' => 'text',
+        'settings' => array(
+          'size' => 100,
+        ),
+        'type' => 'text_textfield',
+        'weight' => 3,
+      ),
+      'display' => array(
+        'default' => array(
+          'label' => 'above',
+          'module' => 'text',
+          'settings' => array(),
+          'type' => 'text_default',
+          'weight' => 11,
+        ),
+        'map_layer' => array(
+          'label' => 'above',
+          'module' => 'text',
+          'settings' => array(),
+          'type' => 'hidden',
+          'weight' => 11,
+        ),
+      ),
+      'entity_type' => 'map_layer',
+      'bundle' => 'target_layer',
+      'default_value' => NULL,
+      'deleted' => 0,
+      'description' => t('Definitions of the interactive views field: ID of the exposed filters form and name of the field.
+      Values must be separated by coma. Example: "views-exposed-form-best-practices-page, field_bpcountry_tid".
+      '),
+    ),
+  );
+
+  // Creates the field instance on the entity.
+  foreach ($array_instances as $instance) {
+    field_create_instance($instance);
+  }
+}
+
+/**
+ * Changes map layer field.
+ *
+ * Adds target layer as target bundles.
+ */
+function _ec_mapeditor_target_change_map_layers_field() {
+  $field_info = field_read_field('map_layers');
+
+  // Adds url layer as target bundles.
+  $field_info['settings']['handler_settings']['target_bundles']['target_layer'] = 'target_layer';
+  field_update_field($field_info);
+}
+
+/**
+ * Implements hook_enable().
+ */
+function ec_mapeditor_target_enable() {
+  $t = get_t();
+  drupal_set_message($t('Target layer has been enabled'));
+}
+
+/**
+ * Implements hook_disable().
+ */
+function ec_mapeditor_target_disable() {
+  $t = get_t();
+  drupal_set_message($t('Target layer has been disabled'));
+}
