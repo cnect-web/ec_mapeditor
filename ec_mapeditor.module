@@ -489,6 +489,7 @@ function _ec_mapeditor_save_map($map) {
       'attributionControl' => $map->attributionControl,
       'attribution' => $map->attribution,
     ),
+    'show_disclaimer' => $map->show_disclaimer,
     'show_author' => $map->show_author,
     'show_settings' => $map->show_settings,
   );
