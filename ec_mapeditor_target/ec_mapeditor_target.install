@@ -50,7 +50,7 @@ function _ec_mapeditor_target_create_map_target_url_field() {
     $array_fields = array(
       'map_target_url' => array(
         'active' => 1,
-        'cardinality' => -1,
+        'cardinality' => 1,
         'deleted' => 0,
         'entity_types' => array(),
         'indexes' => array(),

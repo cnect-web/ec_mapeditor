@@ -2,10 +2,34 @@
  * @file
  * Javascript for DAE.
  */
-var settings = Drupal.settings.target_layers;
+if (typeof Drupal.settings.map !== 'undefined') {
+  
+  var settings = Drupal.settings.map;
+  //alert(settings.countriesMapping[0].name);
+  var countriesMappingItems = '{"countriesMapping":[';
+  var countriesArrayLength = settings.countriesMapping.length;
+  
+  for (var i = 0; i < countriesArrayLength; i++) {
+    
+    var isoCode   = settings.countriesMapping[i].isoCode;
+    var name      = settings.countriesMapping[i].name;
+    var drupalId  = settings.countriesMapping[i].drupalId;
+    
+    countriesMappingItems += '{"isoCode":"' + isoCode + '","name":"' + name + '","drupalid":"' + drupalId + '"}';
+    
+    if (i < (countriesArrayLength-1)) {
+      countriesMappingItems += ', ';
+    } else {
+      countriesMappingItems += ']}';
+    }
+  }
 
-L.custom =
-  {
+  var mapping = 'undefined';
+  if (typeof mapping !== 'undefined') {
+    mapping = JSON.parse(countriesMappingItems);
+  }
+
+  L.custom = {
     map:null,
     currentCountryID:null,
     features: [],
@@ -14,41 +38,9 @@ L.custom =
     checkboxes:null,
     loadingData : false,
     // Source JSON URL.
-    baseSourceURL: "good-practices-json/",
-    countriesMapping:[
-      {isoCode: 'BE', name: 'belgium', drupalid: '74023'},
-      {isoCode: 'BG', name: 'bulgaria', drupalid: '74025'},
-      {isoCode: 'CZ', name: 'czech-republic', drupalid: '74028'},
-      {isoCode: 'DK', name: 'denmark', drupalid: '74029'},
-      {isoCode: 'DE', name: 'germany', drupalid: '74033'},
-      {isoCode: 'EE', name: 'estonia', drupalid: '74030'},
-      {isoCode: 'IE', name: 'ireland', drupalid: '74037'},
-      {isoCode: 'EL', name: 'greece', drupalid: '74034'},
-      {isoCode: 'ES', name: 'spain', drupalid: '74056'},
-      {isoCode: 'FR', name: 'france', drupalid: '74032'},
-      {isoCode: 'HR', name: 'croatia', drupalid: '74026'},
-      {isoCode: 'IT', name: 'italy', drupalid: '74038'},
-      {isoCode: 'CY', name: 'cyprus', drupalid: '74027'},
-      {isoCode: 'LV', name: 'latvia', drupalid: '74039'},
-      {isoCode: 'LT', name: 'lithuania', drupalid: '74041'},
-      {isoCode: 'LU', name: 'luxembourg', drupalid: '74042'},
-      {isoCode: 'HU', name: 'hungary', drupalid: '74035'},
-      {isoCode: 'MT', name: 'malta', drupalid: '74043'},
-      {isoCode: 'NL', name: 'netherlands', drupalid: '74046'},
-      {isoCode: 'AT', name: 'austria', drupalid: '74021'},
-      {isoCode: 'PL', name: 'poland', drupalid: '74048'},
-      {isoCode: 'PT', name: 'portugal', drupalid: '74049'},
-      {isoCode: 'RO', name: 'romania', drupalid: '74050'},
-      {isoCode: 'SI', name: 'slovenia', drupalid: '74055'},
-      {isoCode: 'SK', name: 'slovakia', drupalid: '74054'},
-      {isoCode: 'FI', name: 'finland', drupalid: '74031'},
-      {isoCode: 'SE', name: 'sweden', drupalid: '74057'},
-      {isoCode: 'UK', name: 'united-kingdom', drupalid: '74060'}
-    ],
-    //Categories
-    typeCategories: [ {"name":"winner", "color":"pink", label: "Award winners"}, {"name":"submitted", "color":"turquoise", label: "Award winners"}, {"name":"not-submitted", "color":"blue", label: "Award winners"}],
+    baseSourceURL: settings.url,
+    countriesMapping: mapping.countriesMapping,
     countryNutsLayer: null,
-    // Layer with the EU28 countries.
     countriesEU28: L.wt.countries([{"level":0,"countries":["EU28"]}], {
       insets :false,
       style: function(feature) {
@@ -186,11 +178,12 @@ L.custom =
     onEachNutsFeature:function(feature, layer){
       var self = this;
       layer.on("click", function(e){
-        var element = document.getElementById('edit-field-bpcountry-tid');
-        element.value = self.getCountryInfo(layer.feature.properties.CNTR_ID, 1, 3);
-        L.custom.zoomToFeature(e.target);
+        //var element = document.getElementById('edit-field-bpcountry-tid');
+        //element.value = self.getCountryInfo(layer.feature.properties.CNTR_ID, 1, 3);
+        console.log(e.target);
+        L.custom.zoomToFeature(e.target);  
         // Trigger Drupal ajax call.
-        Drupal.behaviors.ecmapeditor.triggerAjaxMapToView();
+        //Drupal.behaviors.ecmapeditor.triggerAjaxMapToView();
       });
     },
     // Zoom to country and add points.
@@ -246,3 +239,4 @@ L.custom =
       }
     }
   }
+}

@@ -15,7 +15,7 @@ function ec_mapeditor_target_layer_info() {
   return array(
     'target_layer' => array(
       'form_elements' => array('popup', 'clustering', 'icon', 'attribution'),
-      'custom_js' => base_path() . drupal_get_path('module', 'ec_mapeditor_target') . "/js/target_layer.js?v=" . rand(0, 33333),
+      'custom_js' => base_path() . drupal_get_path('module', 'ec_mapeditor_target') . "/js/map.js?v=" . rand(0, 33333),
     ),
   );
 }
@@ -26,24 +26,29 @@ function ec_mapeditor_target_layer_info() {
  * See MapLayerController->buildContent();
  */
 function ec_mapeditor_target_layer_content_alter(&$content, $wrapper, $entity) {
-  // Fetches map data from country layer.
+  // Fetches map data from URL layer.
   if ($entity->type == 'target_layer') {
     $settings = drupal_json_decode($wrapper->settings->value());
+    if (_ec_mapeditor_layer_fieldcheck('map_target_url', $wrapper)) {
+      
+      $countriesMapping = _ec_mapeditor_target_countries_mapping($wrapper->map_target_countries->value());
 
-    $layers[] = array(
-      'layer_settings' => $settings,
-      'label' => $wrapper->title->value(),
-      'countries' => 'county test',
-      'id' => _ec_mapeditor_layer_id($wrapper->title->value()),
-    );
-    $content['#attached']['js'][] = array(
-      'data' => array(
-        'target_layers' => $layers,
-      ),
-      'type' => 'setting',
-    );
-    return $content;
+      $layer = array(
+        'layer_settings' => $settings,
+        'label' => $wrapper->title->value(),
+        'url' => $wrapper->map_target_url->url->value(),
+        'countriesMapping' => $countriesMapping,
+        'id' => _ec_mapeditor_layer_id($wrapper->title->value()),
+      );
+      $content['#attached']['js'][] = array(
+        'data' => array(
+          'map' => $layer,
+        ),
+        'type' => 'setting',
+      );
+    }
   }
+  return $content;
 }
 
 /**
@@ -55,4 +60,34 @@ function ec_mapeditor_target_layer_form_alter(&$form, $settings, $type) {
     $form['map_target_countries'][LANGUAGE_NONE][0]['value']['#description'] .= ' ' . t('<a href="!url">Example</a>', array('!url' => $url));
     return $form;
   }
+}
+
+/**
+ * Creates a JSON object from CSV data.
+ *
+ * @param string $data
+ *   String containing CSV data.
+ *
+ * @return array
+ *   JSON with countries mapping data.
+ */
+function _ec_mapeditor_target_countries_mapping($data) {
+  $lines = explode("\n", $data);
+  $csv_data = array();
+  foreach ($lines as $line) {
+    if (isset($line[0])) {
+      $csv_data[] = str_getcsv($line);
+    }
+  }
+  foreach ($csv_data as $item) {
+    $isoCode = $item[0];
+    $name = $item[1];
+    $drupalId = $item[2];
+    $countriesMapping[] = array(
+      'isoCode' => trim($isoCode),
+      'name' => trim($name),
+      'drupalId' => trim($drupalId),
+    );
+  }
+  return $countriesMapping;
 }
