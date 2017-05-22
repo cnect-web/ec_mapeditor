@@ -14,7 +14,7 @@
 function ec_mapeditor_target_layer_info() {
   return array(
     'target_layer' => array(
-      'form_elements' => array('popup', 'clustering', 'icon', 'attribution'),
+      'form_elements' => array('style', 'icon', 'attribution'),
       'custom_js' => base_path() . drupal_get_path('module', 'ec_mapeditor_target') . "/js/map.js?v=" . rand(0, 33333),
     ),
   );
@@ -90,4 +90,57 @@ function _ec_mapeditor_target_countries_mapping($data) {
     );
   }
   return $countriesMapping;
+}
+
+/**
+ * Implements hook_map_form_elements().
+ *
+ * Defines custom map layer form fields for the country layer. These elements
+ * are added to the form via hook_layer_info().
+ */
+function ec_mapeditor_target_map_form_elements() {
+  $form_elements = array();
+
+  // Defines the style form elements: how are the countries displayed.
+  $form_elements['style'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Style'),
+    '#weight' => 16,
+    'show_label' => array(
+      '#type' => 'checkbox',
+      '#title' => t('Show country label'),
+    ),
+    'fill_color' => array(
+      '#type' => 'textfield',
+      '#title' => t('Fill color'),
+      '#size' => 24,
+    ),
+    'fill_opacity' => array(
+      '#type' => 'textfield',
+      '#title' => t('Fill opacity'),
+      '#size' => 24,
+    ),
+    'border_weight' => array(
+      '#type' => 'textfield',
+      '#title' => t('Border weight'),
+      '#size' => 24,
+    ),
+    'border_color' => array(
+      '#type' => 'textfield',
+      '#title' => t('Border color'),
+      '#size' => 24,
+    ),
+    'border_opacity' => array(
+      '#type' => 'textfield',
+      '#title' => t('Border opacity'),
+      '#size' => 24,
+    ),
+    'dash_array' => array(
+      '#type' => 'textfield',
+      '#title' => t('Dash array'),
+      '#size' => 24,
+      '#description' => t('Size of the dashes in border.'),
+    ),
+  );
+  return $form_elements;
 }

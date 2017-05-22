@@ -5,10 +5,15 @@
 if (typeof Drupal.settings.map !== 'undefined') {
   
   var settings = Drupal.settings.map;
+  var styleSettings = settings.layer_settings.style;
+  var globalSettings = Drupal.settings.settings;
+  
   //alert(settings.countriesMapping[0].name);
   var countriesMappingItems = '{"countriesMapping":[';
   var countriesArrayLength = settings.countriesMapping.length;
-  
+  var markersColor = settings.layer_settings.icon.icon;
+  var tiles = globalSettings.tiles.tiles;
+
   for (var i = 0; i < countriesArrayLength; i++) {
     
     var isoCode   = settings.countriesMapping[i].isoCode;
@@ -45,15 +50,16 @@ if (typeof Drupal.settings.map !== 'undefined') {
       insets :false,
       style: function(feature) {
         return {
-          color: "#0065B1",
-          dashArray: 0,
-          fillColor: "#C8E9F2",
-          fillOpacity: 0.9,
+          color: styleSettings.border_color,
+          dashArray: styleSettings.dash_array,
+          fillColor: styleSettings.fill_color,
+          fillOpacity: styleSettings.fill_opacity,
+          weight: styleSettings.border_weight,
           opacity: 1,
-          smoothFactor: 1.5,
-          weight: 1
+          smoothFactor: 1.5
         }
-      },onEachFeature: function(feature, layer) { L.custom.onEachNutsFeature(feature, layer)
+      },onEachFeature: function(feature, layer) { 
+        L.custom.onEachNutsFeature(feature, layer)
       },
       label: true
     }),
@@ -62,15 +68,16 @@ if (typeof Drupal.settings.map !== 'undefined') {
       insets :false,
       style: function(feature) {
         return {
-          color: "#0065B1",
-          dashArray: 0,
-          fillColor: "#C8E9F2",
-          fillOpacity: 0,
+          color: styleSettings.border_color,
+          dashArray: styleSettings.dash_array,
+          fillColor: styleSettings.fill_color,
+          fillOpacity: styleSettings.fill_opacity,
+          weight: styleSettings.border_weight,
           opacity: 1,
-          smoothFactor: 1.5,
-          weight: 1
+          smoothFactor: 1.5
         }
-      },label: false
+      },
+      label: false
     }),
     init: function(obj, params){
       var self = this;
@@ -91,7 +98,8 @@ if (typeof Drupal.settings.map !== 'undefined') {
 
       // Add layers to the map: default (OSM), Gray background, EU28Countries.
       L.wt.tileLayer().addTo(this.map);
-      L.wt.tileLayer("graybg").addTo(this.map);
+      //L.wt.tileLayer("graybg").addTo(this.map);
+      L.wt.tileLayer(tiles).addTo(this.map);
       this.countriesEU28.addTo(this.map);
     },
     // Trigger actions after map as zoomed.
@@ -164,7 +172,7 @@ if (typeof Drupal.settings.map !== 'undefined') {
           // Default 60.
           large: 65
         },
-        color:"blue",
+        color:markersColor,
         onEachFeature: function(feature,layer){
           layer.bindInfo("<h3>" + feature.properties.name + "</h3><p>" + feature.properties.description + "</p>");
         }
@@ -178,12 +186,14 @@ if (typeof Drupal.settings.map !== 'undefined') {
     onEachNutsFeature:function(feature, layer){
       var self = this;
       layer.on("click", function(e){
-        //var element = document.getElementById('edit-field-bpcountry-tid');
-        //element.value = self.getCountryInfo(layer.feature.properties.CNTR_ID, 1, 3);
+        var element = document.getElementById('edit-field-bpcountry-tid');
+        L.custom.zoomToFeature(e.target);
+        if (element.length > 0) {
+          element.value = self.getCountryInfo(layer.feature.properties.CNTR_ID, 1, 3);
+          // Trigger Drupal ajax call.
+          Drupal.behaviors.ecmapeditor.triggerAjaxMapToView();
+        }
         console.log(e.target);
-        L.custom.zoomToFeature(e.target);  
-        // Trigger Drupal ajax call.
-        //Drupal.behaviors.ecmapeditor.triggerAjaxMapToView();
       });
     },
     // Zoom to country and add points.
