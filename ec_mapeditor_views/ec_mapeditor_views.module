@@ -1,0 +1,9 @@
+<?php
+
+/**
+ * @file
+ * Hooks implementations for ec_mpaeditor_views.
+ */
+function ec_mapeditor_views_views_api() {
+  return array('api' => 3);
+}

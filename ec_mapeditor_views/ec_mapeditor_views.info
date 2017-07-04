@@ -1,0 +1,5 @@
+name = EC Mapeditor views
+description = Views integration for EC Mapeditor module.
+core = 7.x
+dependencies[] = ec_mapeditor
+files[] = ec_mapeditor_views_plugin_style.inc
