@@ -8,6 +8,7 @@ define('EC_MAPEDITOR_WEBTOOLS_ENVIRONMENT', '//europa.eu/webtools/load.js');
 
 // Includes code with function names that do not comply with standards.
 module_load_include('inc', 'ec_mapeditor', 'ec_mapeditor.misc');
+module_load_include('inc', 'ec_mapeditor', 'ec_mapeditor.forms');
 
 /**
  * Implements hook_entity_info().
@@ -453,6 +454,24 @@ function ec_mapeditor_validate_height(&$form, &$form_state) {
   if (isset($form_state['values']['height'])) {
     if (!is_numeric($form_state['values']['height']) || $form_state['values']['height'] < 0) {
       form_error($form['height'], t('Map height needs to be a positive number'));
+    }
+  }
+}
+
+/**
+ * Validate zoom values.
+ */
+function _ec_mapeditor_validate_zoom($form, &$form_state) {
+
+  $initial_zoom = isset($form_state['values']['initial_zoom'][LANGUAGE_NONE]) ? $form_state['values']['initial_zoom'][LANGUAGE_NONE][0]['value'] : NULL;
+
+  $max_zoom = isset($form_state['values']['max_zoom'][LANGUAGE_NONE]) ? $form_state['values']['max_zoom'][LANGUAGE_NONE][0]['value'] : NULL;
+
+  $min_zoom = isset($form_state['values']['min_zoom'][LANGUAGE_NONE]) ? $form_state['values']['min_zoom'][LANGUAGE_NONE][0]['value'] : NULL;
+
+  if (isset($max_zoom) && $max_zoom != "-1" && isset($min_zoom)) {
+    if ($max_zoom > $min_zoom) {
+      form_error($element, t('The minimum zoom setting must be less than or equal to the maximum zoom setting'));
     }
   }
 }

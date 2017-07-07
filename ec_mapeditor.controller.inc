@@ -157,7 +157,7 @@ class MapBuild {
   /**
    * Defines defaults for the map construction (both geofield and NUTS).
    */
-  public function __construct($settings) {
+  public function __construct($settings, $map = NULL) {
     $this->build = array();
 
     // Loads map service via load.js (general JavaScript service).
@@ -173,6 +173,7 @@ class MapBuild {
     $this->build['#attached']['js'][] = array(
       'data' => array(
         'settings' => $settings,
+        'mapeditor_map' => $map,
       ),
       'type' => 'setting',
     );
