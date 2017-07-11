@@ -168,6 +168,28 @@ class ec_mapeditor_views_plugin_style extends views_plugin_style {
       return t("No preview available.");
     }
 
+    if ($this->options['data_source']) {
+      foreach ($this->view->result as $id => $result) {
+        $geofield = $this->get_field_value($id, $this->options['data_source']);
+        if (!empty($geofield)) {
+          $entity = false;
+          // renders entity with selected view mode.
+          if (is_object($result)) {
+            $entity = entity_load_single($this->entity_type, $result->{$this->entity_info['entity keys']['id']});
+            $build = entity_view($this->entity_type, array($entity), $this->options['view_mode']);
+            $popup = drupal_render($build);
+          }
+          $field_items = $geofield;
+          $items[] = array(
+            'field_items' => $field_items,
+            'title' => $entity->title,
+            'popup' => $popup,
+          );
+        }
+      }
+    }
+    $features = _ec_mapeditor_node_prepare_features($items);
+
     $ec_mapeditor_js = base_path() . drupal_get_path('module', 'ec_mapeditor') . "/js/map.js?v=" . rand(0, 33333);
     $custom_js[] = $ec_mapeditor_js;
 
@@ -183,6 +205,8 @@ class ec_mapeditor_views_plugin_style extends views_plugin_style {
 
     $map = new MapBuild($settings->settings, $mapeditor);
     $map->setMoreCustomJs($custom_js);
+    dsm($features);
+    $map->setFeatures($features);
     $elements[0]['map'] = $map->build;
     
     return $elements;
