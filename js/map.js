@@ -34,6 +34,10 @@ L.custom = {
         "minZoom": mapeditor_map.zoom.minZoom,
         "maxZoom": mapeditor_map.zoom.maxZoom
       });
+      // Add markers to the map from View.
+      if (typeof Drupal.settings.features != 'undefined') {
+        var marker = L.wt.markers(Drupal.settings.features).addTo(map);
+      }
     } else {
       var map = L.map(obj, default_settings);
     }
