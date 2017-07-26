@@ -169,6 +169,8 @@ class ec_mapeditor_views_plugin_style extends views_plugin_style {
     }
 
     if ($this->options['data_source']) {
+      $this->render_fields($this->view->result);
+      $items = array();
       foreach ($this->view->result as $id => $result) {
         $geofield = $this->get_field_value($id, $this->options['data_source']);
         if (!empty($geofield)) {
@@ -195,6 +197,7 @@ class ec_mapeditor_views_plugin_style extends views_plugin_style {
 
     $settings = new MapSettings();
     $settings->settings['height'] = $this->options['height'];
+    $settings->settings['fitbounds'] = $this->options['center']['fitbounds'];
 
     $mapeditor['map'] = $this->options['tile_layer']['tile_layer'];
     $mapeditor['zoom']['minZoom'] = $this->options['zoom']['minZoom'];
@@ -202,10 +205,10 @@ class ec_mapeditor_views_plugin_style extends views_plugin_style {
     $mapeditor['zoom']['initialZoom'] = $this->options['zoom']['initialZoom'];
     $mapeditor['center']['lat'] = $this->options['center']['lat'];
     $mapeditor['center']['lon'] = $this->options['center']['lon'];
+    $mapeditor['popin'] = $this->options['popup']['popin'];
 
     $map = new MapBuild($settings->settings, $mapeditor);
     $map->setMoreCustomJs($custom_js);
-    dsm($features);
     $map->setFeatures($features);
     $elements[0]['map'] = $map->build;
     
