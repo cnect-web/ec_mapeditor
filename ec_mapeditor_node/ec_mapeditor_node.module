@@ -26,7 +26,7 @@ function ec_mapeditor_node_layer_content_alter(&$content, $wrapper, $entity) {
         $title = $node->title;
 
         // Prepares the node to render the pop-up using the chosen view mode.
-        $view_mode = isset($settings['view_mode']) ? $settings['view_mode'] : 'teaser';
+        $view_mode = isset($settings['node_filters']['view_mode']) ? $settings['node_filters']['view_mode'] : 'teaser';
         $node_view = node_view($node, $view_mode);
 
         // Gets all the field values.
