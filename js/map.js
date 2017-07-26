@@ -36,7 +36,20 @@ L.custom = {
       });
       // Add markers to the map from View.
       if (typeof Drupal.settings.features != 'undefined') {
-        var marker = L.wt.markers(Drupal.settings.features).addTo(map);
+
+        var markersBindPopup = {
+          onEachFeature: function(feature, layer) {
+            if (feature.properties && feature.properties.popupContent) {
+              if(mapeditor_map.popin) {
+                layer.bindInfo(feature.properties.popupContent);
+              } else {
+                layer.bindPopup(feature.properties.popupContent);
+              }
+            }
+          }
+        };
+
+        var marker = L.wt.markers(Drupal.settings.features, markersBindPopup).addTo(map);
       }
     } else {
       var map = L.map(obj, default_settings);
@@ -87,7 +100,7 @@ L.custom = {
     }
 
     // Bounds map to markers, if set and if there is a group.
-    if (settings.center.fitbounds == '1') {
+    if (settings.center.fitbounds == true) {
       // Node and CSV layers are bound as a group.
       if (typeof group != 'undefined') {
         map.fitBounds(group.getBounds(), {padding: [30, 30]});
@@ -106,6 +119,10 @@ L.custom = {
     // Adds layers panel to sidebar when there are layers.
     if (typeof layers_panel != 'undefined') {
       layers_panel.addTo(map);
+    }
+
+    if (typeof Drupal.settings.features != 'undefined') {
+      marker.fitBounds(Drupal.settings.features);
     }
 
     // Processes the next component.
