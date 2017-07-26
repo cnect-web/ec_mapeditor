@@ -34,8 +34,14 @@ L.custom = {
         "minZoom": mapeditor_map.zoom.minZoom,
         "maxZoom": mapeditor_map.zoom.maxZoom
       });
+
       // Add markers to the map from View.
       if (typeof Drupal.settings.features != 'undefined') {
+
+        var cluster_markers = false;
+        if (settings.cluster_markers == 1) {
+          cluster_markers = true;
+        }
 
         var markersBindPopup = {
           onEachFeature: function(feature, layer) {
@@ -46,9 +52,10 @@ L.custom = {
                 layer.bindPopup(feature.properties.popupContent);
               }
             }
-          }
+          },
+          color: settings.icon,
+          cluster: cluster_markers
         };
-
         var marker = L.wt.markers(Drupal.settings.features, markersBindPopup).addTo(map);
       }
     } else {

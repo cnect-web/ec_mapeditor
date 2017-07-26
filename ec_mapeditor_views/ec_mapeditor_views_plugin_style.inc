@@ -198,6 +198,8 @@ class ec_mapeditor_views_plugin_style extends views_plugin_style {
     $settings = new MapSettings();
     $settings->settings['height'] = $this->options['height'];
     $settings->settings['fitbounds'] = $this->options['center']['fitbounds'];
+    $settings->settings['cluster_markers'] = $this->options['clustering']['cluster_markers'];
+    $settings->settings['icon'] = $this->options['icon']['icon'];
 
     $mapeditor['map'] = $this->options['tile_layer']['tile_layer'];
     $mapeditor['zoom']['minZoom'] = $this->options['zoom']['minZoom'];
