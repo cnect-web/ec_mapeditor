@@ -19,11 +19,6 @@ function _ec_mapeditor_form_elements($group, $settings, $options = NULL) {
         '#type' => 'container',
         '#weight' => 10,
       );
-      $form_element['show'] = array(
-        '#title' => t('Show a popup when markers are clicked.'),
-        '#type' => 'checkbox',
-        '#default_value' => $settings[$group]['show'],
-      );
       $form_element['popin'] = array(
         '#title' => t('Use pop-in (show details in right side bar).'),
         '#type' => 'checkbox',

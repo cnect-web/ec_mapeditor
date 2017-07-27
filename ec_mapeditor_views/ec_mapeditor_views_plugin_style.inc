@@ -188,31 +188,34 @@ class ec_mapeditor_views_plugin_style extends views_plugin_style {
           );
         }
       }
+      $features = _ec_mapeditor_node_prepare_features($items);
+
+      $ec_mapeditor_js = base_path() . drupal_get_path('module', 'ec_mapeditor') . "/js/map.js?v=" . rand(0, 33333);
+      $custom_js[] = $ec_mapeditor_js;
+
+      $settings = new MapSettings();
+      $settings->settings['height'] = $this->options['height'];
+      $settings->settings['fitbounds'] = $this->options['center']['fitbounds'];
+      $settings->settings['cluster_markers'] = $this->options['clustering']['cluster_markers'];
+      $settings->settings['icon'] = $this->options['icon']['icon'];
+      if (count($features['features']) == 0 && $this->options['hide_empty']) {
+        return '';
+      }
+      $mapeditor['map'] = $this->options['tile_layer']['tile_layer'];
+      $mapeditor['zoom']['minZoom'] = $this->options['zoom']['minZoom'];
+      $mapeditor['zoom']['maxZoom'] = $this->options['zoom']['maxZoom'];
+      $mapeditor['zoom']['initialZoom'] = $this->options['zoom']['initialZoom'];
+      $mapeditor['center']['lat'] = $this->options['center']['lat'];
+      $mapeditor['center']['lon'] = $this->options['center']['lon'];
+      $mapeditor['popin'] = $this->options['popup']['popin'];
+
+      $map = new MapBuild($settings->settings, $mapeditor);
+      $map->setMoreCustomJs($custom_js);
+      $map->setFeatures($features);
+      $elements[0]['map'] = $map->build;
+
+      return $elements;
     }
-    $features = _ec_mapeditor_node_prepare_features($items);
-
-    $ec_mapeditor_js = base_path() . drupal_get_path('module', 'ec_mapeditor') . "/js/map.js?v=" . rand(0, 33333);
-    $custom_js[] = $ec_mapeditor_js;
-
-    $settings = new MapSettings();
-    $settings->settings['height'] = $this->options['height'];
-    $settings->settings['fitbounds'] = $this->options['center']['fitbounds'];
-    $settings->settings['cluster_markers'] = $this->options['clustering']['cluster_markers'];
-    $settings->settings['icon'] = $this->options['icon']['icon'];
-
-    $mapeditor['map'] = $this->options['tile_layer']['tile_layer'];
-    $mapeditor['zoom']['minZoom'] = $this->options['zoom']['minZoom'];
-    $mapeditor['zoom']['maxZoom'] = $this->options['zoom']['maxZoom'];
-    $mapeditor['zoom']['initialZoom'] = $this->options['zoom']['initialZoom'];
-    $mapeditor['center']['lat'] = $this->options['center']['lat'];
-    $mapeditor['center']['lon'] = $this->options['center']['lon'];
-    $mapeditor['popin'] = $this->options['popup']['popin'];
-
-    $map = new MapBuild($settings->settings, $mapeditor);
-    $map->setMoreCustomJs($custom_js);
-    $map->setFeatures($features);
-    $elements[0]['map'] = $map->build;
-    
-    return $elements;
+    return '';
   }
 }
