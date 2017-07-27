@@ -8,20 +8,19 @@ if (typeof Drupal.settings.map !== 'undefined') {
   var styleSettings = settings.layer_settings.style;
   var globalSettings = Drupal.settings.settings;
   
-  //alert(settings.countriesMapping[0].name);
   var countriesMappingItems = '{"countriesMapping":[';
   var countriesArrayLength = settings.countriesMapping.length;
   var markersColor = settings.layer_settings.icon.icon;
   var tiles = globalSettings.tiles.tiles;
 
   for (var i = 0; i < countriesArrayLength; i++) {
-    
+
     var isoCode   = settings.countriesMapping[i].isoCode;
     var name      = settings.countriesMapping[i].name;
     var drupalId  = settings.countriesMapping[i].drupalId;
-    
+
     countriesMappingItems += '{"isoCode":"' + isoCode + '","name":"' + name + '","drupalid":"' + drupalId + '"}';
-    
+
     if (i < (countriesArrayLength-1)) {
       countriesMappingItems += ', ';
     } else {
