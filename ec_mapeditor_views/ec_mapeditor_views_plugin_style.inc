@@ -54,7 +54,6 @@ class ec_mapeditor_views_plugin_style extends views_plugin_style {
     $options['settings'] = array();
     $options['tile_layer']['contains'] = array(
       'tile_layer' => array('default' => 'osmec'),
-      'country_highlight' => array('default' => ''),
     );
     $options['height'] = array('default' => '430');
     $options['center']['contains'] = array(

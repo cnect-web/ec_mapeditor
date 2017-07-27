@@ -97,13 +97,6 @@ function _ec_mapeditor_form_elements($group, $settings, $options = NULL) {
         '#default_value' => isset($settings[$group]['tile_layer']) ? $settings[$group]['tile_layer'] : 'osmec',
         '#options' => _ec_mapeditor_tiles(),
       );
-      $form_element['country_highlight'] = array(
-        '#type' => 'textfield',
-        '#size' => 100,
-        '#description' => t('Adds country shaped polygons to the map. Enter two digit country codes separated by spaces. For example "BE NL LU"'),
-        '#title' => t('Highlight countries'),
-        '#default_value' => isset($settings[$group]['country_highlight']) ? $settings[$group]['country_highlight'] : NULL,
-      );
       break;
 
     case 'height':
