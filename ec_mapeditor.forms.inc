@@ -110,13 +110,7 @@ function _ec_mapeditor_form_elements($group, $settings, $options = NULL) {
       );
 
       // Displays a warning under the title field for a low height.
-      $form_element['height']['#suffix'] = "<div id='min-height-label'
-      class='description'></div>";
-      //$form_element['height']['#attached']['js'][] = array(
-        //'type' => 'file',
-        //'data' => drupal_get_path('module', 'ec_mapeditor') . '/js/forms.js',
-      //);
-      //dsm($form_element);
+      $form_element['height']['#suffix'] = "<div id='min-height-label' class='description'></div>";
       $form_element['height']['#attached']['js'][] = array(
         'data' => array(
           'ec_mapeditor' => array(
@@ -135,7 +129,7 @@ function _ec_mapeditor_form_elements($group, $settings, $options = NULL) {
       $form_element = array(
         '#type' => 'fieldset',
         '#title' => t('Map center'),
-        '#description' => t('Center of the map. E.g. latitude 50.84 and 4.36 longitude for Brussels. If empty, the first geofield value from the node will be used.'),
+        '#description' => t('Center of the map. E.g. latitude 50.84 and 4.36 longitude for Brussels. In case of visible markers the map will be centered automatically on them ignoring settings below.'),
         '#weight' => 8,
       );
       $form_element['lat'] = array(
@@ -143,20 +137,14 @@ function _ec_mapeditor_form_elements($group, $settings, $options = NULL) {
         '#type' => 'textfield',
         '#size' => 10,
         '#default_value' => isset($settings[$group]['lat']) ? $settings[$group]['lat'] : 50.84,
-        '#required' => FALSE,
+        '#required' => TRUE,
       );
       $form_element['lon'] = array(
         '#title' => t('Longitude'),
         '#type' => 'textfield',
         '#size' => 10,
         '#default_value' => isset($settings[$group]['lon']) ? $settings[$group]['lon'] : 4.36,
-        '#required' => FALSE,
-      );
-      $form_element['fitbounds'] = array(
-        '#type' => 'checkbox',
-        '#title' => t('Fit map to visible markers'),
-        '#description' => t('This sets the center of the map automatically based on the visible markers. It ignores the map center coordinates set above.'),
-        '#default_value' => isset($settings[$group]['fitbounds']) ? $settings[$group]['fitbounds'] : TRUE,
+        '#required' => TRUE,
       );
       break;
 
