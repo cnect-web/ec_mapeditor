@@ -178,6 +178,5 @@ function _ec_mapeditor_form_elements($group, $settings, $options = NULL) {
       );
       break;
   }
-
   return $form_element;
 }

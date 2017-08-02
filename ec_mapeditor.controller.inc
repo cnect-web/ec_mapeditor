@@ -82,13 +82,8 @@ class MapController extends EntityAPIController {
       $custom_js[] = $map_layer_js;
     }
 
-    if (module_exists('ec_mapeditor_target') && $this->checkTargetLayerEntity($entity)) {
-      //
-    } else {
-      $ec_mapeditor_js = base_path() . drupal_get_path('module', 'ec_mapeditor') . "/js/map.js?v=" . rand(0, 33333);
-      $custom_js[] = $ec_mapeditor_js;
-    }
-
+    $ec_mapeditor_js = base_path() . drupal_get_path('module', 'ec_mapeditor') . "/js/map.js?v=" . rand(0, 33333);
+    $custom_js[] = $ec_mapeditor_js;
 
     $map->setMoreCustomJs($custom_js);
     $content['map'] = $map->build;

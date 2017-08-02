@@ -181,16 +181,28 @@ class ec_mapeditor_views_plugin_style extends views_plugin_style {
             $popup = drupal_render($build);
           }
           $field_items = $geofield;
-          $items[] = array(
-            'field_items' => $field_items,
-            'title' => $entity->title,
-            'popup' => $popup,
-          );
+          switch ($this->entity_type) {
+            case "node":
+              $items[] = array(
+                'field_items' => $field_items,
+                'title' => $entity->title,
+                'popup' => $popup,
+              );
+              break;
+
+            default:
+              $items[] = array(
+                'field_items' => $field_items,
+                'title' => '',
+                'popup' => $popup,
+              );
+              break;
+          }
         }
       }
       $features = _ec_mapeditor_node_prepare_features($items);
 
-      $ec_mapeditor_js = base_path() . drupal_get_path('module', 'ec_mapeditor') . "/js/map.js?v=" . rand(0, 33333);
+      $ec_mapeditor_js = base_path() . drupal_get_path('module', 'ec_mapeditor_views') . "/js/map.js?v=" . rand(0, 33333);
       $custom_js[] = $ec_mapeditor_js;
 
       $settings = new MapSettings();
