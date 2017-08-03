@@ -8,6 +8,7 @@
  *
  * @codingStandardsIgnoreFile
  *
+ * Ticket: "https://webgate.ec.europa.eu/CITnet/jira/browse/DAE-2420".
  */
 
 /**
