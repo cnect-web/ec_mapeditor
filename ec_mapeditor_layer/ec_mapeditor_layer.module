@@ -18,8 +18,8 @@ function ec_mapeditor_layer_entity_info() {
   $return = array(
     'map_layer' => array(
       'label' => t('Map layer'),
-      'entity class' => 'MapLayer',
-      'controller class' => 'MapLayerController',
+      'entity class' => 'EcMapeditorLayer',
+      'controller class' => 'EcMapeditorLayerController',
       'base table' => 'map_layer',
       'fieldable' => TRUE,
       'entity keys' => array(
@@ -42,14 +42,14 @@ function ec_mapeditor_layer_entity_info() {
       'module' => 'ec_mapeditor_layer',
       'access callback' => 'ec_mapeditor_layer_access',
       'inline entity form' => array(
-        'controller' => 'MapLayerInlineEntityFormController',
+        'controller' => 'EcMapeditorLayerInlineEntityFormController',
       ),
     ),
   );
   $return['map_layer_type'] = array(
     'label' => t('Map layer type'),
-    'entity class' => 'MapLayerType',
-    'controller class' => 'MapLayerTypeController',
+    'entity class' => 'EcMapeditorLayerType',
+    'controller class' => 'EcMapeditorLayerTypeController',
     'base table' => 'map_layer_type',
     'fieldable' => FALSE,
     'bundle of' => 'map_layer',
@@ -64,7 +64,7 @@ function ec_mapeditor_layer_entity_info() {
     'admin ui' => array(
       'path' => 'admin/structure/map-layer-types',
       'file' => 'ec_mapeditor_layer.admin.inc',
-      'controller class' => 'MapLayerTypeUIController',
+      'controller class' => 'EcMapeditorLayerTypeUIController',
     ),
     'access callback' => 'ec_mapeditor_layer_type_access',
   );
@@ -419,7 +419,7 @@ function ec_mapeditor_layer_inline_entity_form_entity_form_alter(&$entity_form, 
 /**
  * Class providing JavaScript settings for a map layer.
  */
-class MapLayerSettings {
+class EcMapeditorLayerSettings {
 
   /**
    * Defines list of default settings.

@@ -7,7 +7,7 @@
 /**
  * Provides map entity properties and content.
  */
-class MapController extends EntityAPIController {
+class EcMapeditorController extends EntityAPIController {
 
   /**
    * Creates map entity and adds common properties such as author.
@@ -29,7 +29,7 @@ class MapController extends EntityAPIController {
    */
   public function buildContent($entity, $view_mode = 'full', $langcode = NULL, $content = array()) {
     $wrapper = entity_metadata_wrapper('map', $entity);
-    
+
     // Sets defaults for theming properties like fields.
     $field_defaults = array(
       '#theme' => 'field',
@@ -54,7 +54,7 @@ class MapController extends EntityAPIController {
       ),
     ) + $field_defaults;
 
-    $settings = new MapSettings();
+    $settings = new EcMapeditorMapSettings();
     $settings->customize(drupal_json_decode($wrapper->settings->value()));
 
     // @todo prevent this.
@@ -64,7 +64,7 @@ class MapController extends EntityAPIController {
     }
 
     // Creates the render array for the map.
-    $map = new MapBuild($settings);
+    $map = new EcMapeditorMapBuild($settings);
 
     // Adds custom JavaScripts defined by the map layers.
     // @todo figure out how to pass only the active map layer's js.
@@ -90,19 +90,12 @@ class MapController extends EntityAPIController {
     return parent::buildContent($entity, $view_mode, $langcode, $content);
   }
 
-  private function checkTargetLayerEntity($entity) {
-    foreach($entity->map_layers['und'] as $key=>$val) {
-      if($val['entity']->type == 'target_layer') {
-        return TRUE;
-      }
-    }
-  }
 }
 
 /**
  * Extends entity for map.
  */
-class Map extends Entity {
+class EcMapeditorMap extends Entity {
 
   /**
    * Provides default label.
@@ -123,7 +116,7 @@ class Map extends Entity {
 /**
  * UI controller for map layer type.
  */
-class MapUIController extends EntityDefaultUIController {
+class EcMapeditorMapUIController extends EntityDefaultUIController {
 
   // @codingStandardsIgnoreStart
   /**
@@ -144,7 +137,7 @@ class MapUIController extends EntityDefaultUIController {
  * This class constructs the build Drupal render array with the necessary
  * JavaScript and markup for the EC map service.
  */
-class MapBuild {
+class EcMapeditorMapBuild {
 
   // Holds filename of custom JavaScript to be passed to load.js.
   private $customJs;

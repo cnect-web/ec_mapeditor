@@ -47,7 +47,7 @@ function ec_mapeditor_node_layer_content_alter(&$content, $wrapper, $entity) {
         $features = _ec_mapeditor_node_prepare_features($items);
       }
       elseif ($type == 'geofield_geojson') {
-        foreach ($items as $key => $item) {
+        foreach ($items as $item) {
           $geojson_features = drupal_json_decode($item['field_items'][0]['geofield_geojson']);
           foreach ($geojson_features['features'] as $geojson_feature) {
             $features[] = $geojson_feature;
@@ -250,7 +250,7 @@ function _ec_mapeditor_node_prepare_features($items = array()) {
   $features = array();
   geophp_load();
   foreach ($items as $item) {
-    foreach ($item['field_items'] as $delta => $field_item) {
+    foreach ($item['field_items'] as $field_item) {
 
       // Translate linestring to polyline:
       if ($field_item['geo_type'] == 'multilinestring') {
@@ -267,7 +267,7 @@ function _ec_mapeditor_node_prepare_features($items = array()) {
         case 'point':
         case 'polygon':
         case 'linestring':
-          $geofeature = new EcMapeditorGeoFeature($type, $geom);
+          $geofeature = new EcMapeditorNodeGeoFeature($type, $geom);
           if (isset($item['title']) && isset($item['popup'])) {
             $geofeature->setProperties($item['title'], $item['popup']);
           }
@@ -282,7 +282,7 @@ function _ec_mapeditor_node_prepare_features($items = array()) {
           $components = $geom->getComponents();
           foreach ($components as $component) {
             $class = get_class($component);
-            $geofeature = new EcMapeditorGeoFeature();
+            $geofeature = new EcMapeditorNodeGeoFeature();
             if (isset($item['title']) && isset($item['popup'])) {
               $geofeature->setProperties($item['title'], $item['popup']);
             }
@@ -297,7 +297,7 @@ function _ec_mapeditor_node_prepare_features($items = array()) {
           $components = $geom->getComponents();
           foreach ($components as $component) {
             $class = get_class($component);
-            $geofeature = new EcMapeditorGeoFeature($class, $component);
+            $geofeature = new EcMapeditorNodeGeoFeature($class, $component);
             if (isset($item['title']) && isset($item['popup'])) {
               $geofeature->setProperties($item['title'], $item['popup']);
             }

@@ -37,7 +37,7 @@ function map_form($form, &$form_state, $map) {
   );
 
   // Provides a field to store various map settings.
-  $settings = new MapSettings();
+  $settings = new EcMapeditorMapSettings();
   if (!empty($map->settings)) {
     $settings->customize(drupal_json_decode($map->settings));
   }

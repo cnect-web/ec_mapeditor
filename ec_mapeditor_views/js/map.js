@@ -34,9 +34,10 @@ L.custom = {
       var markersBindPopup = {
         onEachFeature: function(feature, layer) {
           if (feature.properties && feature.properties.popupContent) {
-            if(mapeditor_map.popin) {
+            if (mapeditor_map.popin) {
               layer.bindInfo(feature.properties.popupContent);
-            } else {
+            }
+            else {
               layer.bindPopup(feature.properties.popupContent);
             }
           }
@@ -67,7 +68,7 @@ L.custom = {
       }
     });
 
-    // Bounds map to markers
+    // Bounds map to markers.
     if (typeof Drupal.settings.features != 'undefined') {
       marker.fitBounds(Drupal.settings.features);
     }

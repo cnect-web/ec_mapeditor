@@ -84,7 +84,7 @@ function map_layer_form($form, &$form_state, $map_layer) {
   $form_state['map_layer'] = $map_layer;
 
   // Loads settings.
-  $settings = new MapLayerSettings();
+  $settings = new EcMapeditorLayerSettings();
   if (!empty($map_layer->settings)) {
     $settings->customize(drupal_json_decode($map_layer->settings));
   }
