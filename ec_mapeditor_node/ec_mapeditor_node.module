@@ -20,8 +20,8 @@ function ec_mapeditor_node_layer_content_alter(&$content, $wrapper, $entity) {
     if ($settings['term_filters']) {
       $settings['node_filters']['term_filters'] = $settings['term_filters'];
     }
-    // Fetches nodes using chosen filters.
 
+    // Fetches nodes using chosen filters.
     $filters = $settings['node_filters'];
     $nodes = _ec_mapeditor_node_fetch_nodes($filters);
     if ($nodes) {
