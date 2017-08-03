@@ -5,6 +5,9 @@
  * Extension of the Views Plugin Style for Mapeditor Map.
  *
  * Adapted for the Leaflet Views module.
+ *
+ * @codingStandardsIgnoreFile
+ *
  */
 
 /**
