@@ -13,7 +13,7 @@ function ec_mapeditor_node_field_formatter_info() {
   if (module_exists('geofield') || module_exists('nexteuropa_geofield')) {
 
     // Fetches default settings.
-    $settings = new MapSettings();
+    $settings = new EcMapeditorMapSettings();
 
     // @todo. how to prevent this?
     $settings = $settings->settings;
@@ -146,7 +146,7 @@ function ec_mapeditor_node_field_formatter_view($entity_type, $entity, $field, $
       );
 
       // Defines the map settings.
-      $map_settings = new MapSettings();
+      $map_settings = new EcMapeditorMapSettings();
 
       // Fetches map settings from display settings.
       $custom_map_settings = array(
@@ -170,7 +170,7 @@ function ec_mapeditor_node_field_formatter_view($entity_type, $entity, $field, $
       $map_settings = $map_settings->settings;
 
       // Creates the render array for the map.
-      $map = new MapBuild($map_settings);
+      $map = new EcMapeditorMapBuild($map_settings);
 
       // Defines the custom JavaScripts for the webtools JS map library.
       $node_layer_js = base_path() . drupal_get_path('module', 'ec_mapeditor_node') . "/js/node_layer.js?v=" . rand(0, 33333);

@@ -5,3 +5,5 @@ dependencies[] = ec_mapeditor
 dependencies[] = ec_mapeditor_node
 dependencies[] = ec_mapeditor_tile
 files[] = ec_mapeditor_views_plugin_style.inc
+php = 5.6
+multisite_version = 2.2

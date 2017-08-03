@@ -8,7 +8,7 @@
 /**
  * Class providing feature in GeoJSON format for map.
  */
-class EcMapeditorGeoFeature {
+class EcMapeditorNodeGeoFeature {
 
   /**
    * Defines defaults.

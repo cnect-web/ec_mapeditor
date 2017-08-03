@@ -18,7 +18,7 @@ function ec_mapeditor_views_views_plugins() {
         'title' => t('EC Mapeditor Map'),
         'help' => t('Displays a view as an EC Mapedior'),
         'path' => drupal_get_path('module', 'ec_mapeditor_views'),
-        'handler' => 'ec_mapeditor_views_plugin_style',
+        'handler' => 'EcMapeditorViewsPluginStyle',
         'theme' => 'mapeditor-map',
         'uses fields' => TRUE,
         'uses row plugins' => FALSE,

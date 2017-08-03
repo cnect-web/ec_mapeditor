@@ -8,7 +8,7 @@
  * Helper function to standardize forms between views and field formatter.
  *
  * @return array
- * A fully loaded form element.
+ *   A fully loaded form element.
  */
 function _ec_mapeditor_form_elements($group, $settings, $options = NULL) {
   $form_element = NULL;

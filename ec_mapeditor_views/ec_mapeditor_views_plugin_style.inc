@@ -7,13 +7,23 @@
  * Adapted for the Leaflet Views module.
  */
 
-class ec_mapeditor_views_plugin_style extends views_plugin_style {
+/**
+ * Class that extends control on how the view display format is rendered.
+ */
+class EcMapeditorViewsPluginStyle extends views_plugin_style {
+
   /**
-   * @param $view
-   * @param $display
-   * @param null $options
+   * Initialize a style plugin.
+   *
+   * @param object $view
+   *   Contains information about the view.
+   * @param object $display
+   *   Contains information about the display.
+   * @param array $options
+   *   The style options might come externally as the style can be
+   *   sourced from at least two locations.
    */
-  public function init(&$view, &$display, $options = NULL ) {
+  public function init(&$view, &$display, $options = NULL) {
     parent::init($view, $display, $options);
     foreach (entity_get_info() as $key => $info) {
       if ($view->base_table == $info['base table']) {
@@ -33,10 +43,10 @@ class ec_mapeditor_views_plugin_style extends views_plugin_style {
    * @return array
    *   Returns the entity_info array.
    */
-  function getEntityInfoByTable($table) {
+  public function getEntityInfoByTable($table) {
     $info = entity_get_info();
-    foreach($info as $entity_type => &$entity_info) {
-      if($entity_info['base table'] == $table) {
+    foreach ($info as $entity_type => &$entity_info) {
+      if ($entity_info['base table'] == $table) {
         $entity_info['entity type'] = $entity_type;
         return $entity_info;
       }
@@ -79,8 +89,10 @@ class ec_mapeditor_views_plugin_style extends views_plugin_style {
   /**
    * Build options form.
    *
-   * @param $form
-   * @param $form_state
+   * @param array $form
+   *   Contains information about the form.
+   * @param array $form_state
+   *   Contains information about the form state.
    */
   public function options_form(&$form, &$form_state) {
     parent::options_form($form, $form_state);
@@ -173,8 +185,8 @@ class ec_mapeditor_views_plugin_style extends views_plugin_style {
       foreach ($this->view->result as $id => $result) {
         $geofield = $this->get_field_value($id, $this->options['data_source']);
         if (!empty($geofield)) {
-          $entity = false;
-          // renders entity with selected view mode.
+          $entity = FALSE;
+          // Renders entity with selected view mode.
           if (is_object($result)) {
             $entity = entity_load_single($this->entity_type, $result->{$this->entity_info['entity keys']['id']});
             $build = entity_view($this->entity_type, array($entity), $this->options['view_mode']);
@@ -205,7 +217,7 @@ class ec_mapeditor_views_plugin_style extends views_plugin_style {
       $ec_mapeditor_js = base_path() . drupal_get_path('module', 'ec_mapeditor_views') . "/js/map.js?v=" . rand(0, 33333);
       $custom_js[] = $ec_mapeditor_js;
 
-      $settings = new MapSettings();
+      $settings = new EcMapeditorMapSettings();
       $settings->settings['height'] = $this->options['height'];
       $settings->settings['fitbounds'] = $this->options['center']['fitbounds'];
       $settings->settings['cluster_markers'] = $this->options['clustering']['cluster_markers'];
@@ -221,7 +233,7 @@ class ec_mapeditor_views_plugin_style extends views_plugin_style {
       $mapeditor['center']['lon'] = $this->options['center']['lon'];
       $mapeditor['popin'] = $this->options['popup']['popin'];
 
-      $map = new MapBuild($settings->settings, $mapeditor);
+      $map = new EcMapeditorMapBuild($settings->settings, $mapeditor);
       $map->setMoreCustomJs($custom_js);
       $map->setFeatures($features);
       $elements[0]['map'] = $map->build;
@@ -230,4 +242,5 @@ class ec_mapeditor_views_plugin_style extends views_plugin_style {
     }
     return '';
   }
+
 }

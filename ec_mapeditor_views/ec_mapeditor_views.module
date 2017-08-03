@@ -4,6 +4,10 @@
  * @file
  * Hooks implementations for ec_mpaeditor_views.
  */
+
+/**
+ * Implements hook_views_api().
+ */
 function ec_mapeditor_views_views_api() {
   return array('api' => 3);
 }
