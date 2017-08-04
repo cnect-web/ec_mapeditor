@@ -7,7 +7,6 @@ dependencies[] = views
 dependencies[] = inline_entity_form
 dependencies[] = entityreference
 files[] = ec_mapeditor.controller.inc
-scripts[] = js/dae.js
 multisite_version = 2.2
 package = Maps
 php = 5.2.4
