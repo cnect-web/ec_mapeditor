@@ -128,6 +128,16 @@ function ec_mapeditor_menu() {
 }
 
 /**
+ * Implements hook_menu_alter().
+ */
+function ec_mapeditor_menu_alter(&$items) {
+  # Map Layer Types should not be created nor managed by the user.
+  if (isset($items['admin/structure/map-layer-types'])) {
+    $items['admin/structure/map-layer-types']['access callback'] = FALSE;
+  }
+}
+
+/**
  * Implements hook_permission().
  */
 function ec_mapeditor_permission() {

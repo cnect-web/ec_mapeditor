@@ -43,12 +43,16 @@ if (typeof Drupal.settings.csv_layers !== 'undefined') {
     if (csv_layers[i].layer_settings.popup.show_popup) {
       if (csv_layers[i].layer_settings.popup.popin) {
         markers_options.onEachFeature = function (feature, layer) {
-          layer.bindInfo(feature.properties.popupContent)
+          var title = "<a href='" + feature.properties.popupContent.url + "'><h2>" + feature.properties.popupContent.title + "</h2></a>";
+          var body = feature.properties.popupContent.description;
+          layer.bindInfo(title + ' ' + body);
         }
       }
       else {
         markers_options.onEachFeature = function (feature, layer) {
-          layer.bindPopup(feature.properties.popupContent);
+          var title = "<a href='" + feature.properties.popupContent.url + "'><h2>" + feature.properties.popupContent.title + "</h2></a>";
+          var body = feature.properties.popupContent.description;
+          layer.bindPopup(title + ' ' + body);
         }
       }
     }
