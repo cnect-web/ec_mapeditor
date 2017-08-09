@@ -48,10 +48,6 @@ if (typeof Drupal.settings.url_layers !== 'undefined') {
       }
     }
 
-    if (url_layers[i].layer_settings.disclaimer.disclaimerControl == '1') {
-      document.getElementById('leaflet-disclaimer').style.display = 'none';
-    }
-
     // Collects the layers that are marked "enabled" to be activated in
     // map.js.
     id = L.wt.markers(url_layers[i].urls, markers_options);
