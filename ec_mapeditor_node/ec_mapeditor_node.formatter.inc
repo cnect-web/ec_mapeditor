@@ -29,6 +29,7 @@ function ec_mapeditor_node_field_formatter_info() {
         'icon' => $settings['icon'],
         'center' => $settings['center'],
         'attribution' => $settings['attribution'],
+        'fields_in_popup' => $settings['fields_in_popup'],
       ),
     );
   }
@@ -50,6 +51,7 @@ function ec_mapeditor_node_field_formatter_settings_form($field, $instance, $vie
     'icon',
     'center',
     'attributions',
+    'fields_in_popup',
   );
   return _ec_mapeditor_custom_map_form_elements($elements, $settings);
 }
@@ -106,11 +108,39 @@ function ec_mapeditor_node_field_formatter_view($entity_type, $entity, $field, $
 
       // Processes geo data from geofield.
       if ($field['type'] == 'geofield') {
-        $features = _ec_mapeditor_node_prepare_features($field_items);
 
+        // Display popup content on node page EC_mapeditor field formatter.
+        $fields_in_popup = $display['settings']['fields_in_popup']['fields_in_popup'];
+        if (NULL === $fields_in_popup) {
+          $layer_settings['popup']['show_popup'] = FALSE;
+        }
+        else {
+
+          $popup_content = "";
+          $popup_field = explode(',', $fields_in_popup);
+
+          foreach ($popup_field as $field_name) {
+            if ($field_name == 'title') {
+              $popup_content .= '<h2 class="node-page-popup-title">' . $entity->title . '</h2>';
+            }
+            else {
+              $field_view = field_view_field($entity_type, $entity, trim($field_name), 'full');
+              $popup_content .= drupal_render($field_view);
+            }
+          }
+
+          // Those fields ([title],[popup]) are mandatory to display a popup.
+          $field_items[0]['title'] = 'Node popup';
+          $field_items[0]['popup'] = $popup_content;
+
+          // Show popin window.
+          $layer_settings['popup']['show_popup'] = TRUE;
+          $layer_settings['popup']['popin'] = TRUE;
+        }
+
+        $features = _ec_mapeditor_node_prepare_features($field_items);
         // Disables popup for the field formatter because there is no pop up
         // information in the geofield.
-        $layer_settings['popup']['show_popup'] = FALSE;
       }
 
       // Processes geo data from nexteuropa geofield.

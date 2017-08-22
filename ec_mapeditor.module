@@ -344,6 +344,21 @@ function ec_mapeditor_map_form_elements() {
       ),
     ),
 
+    // Defines form elements to choose background map images (tiles).
+    'fields_in_popup' => array(
+      '#type' => 'fieldset',
+      '#title' => t('Single Node Popup'),
+      '#weight' => 30,
+      'fields_in_popup' => array(
+        '#type' => 'textfield',
+        '#size' => 80,
+        '#placeholder' => 'title, field_description, field_coordinates',
+        '#title' => t('Fields in Popup'),
+        '#description' => t('Fields to show within the Popup window on single node page. <br /> 
+            Use CSV format. Example: title, field_description, field_address, ... '),
+      ),
+    ),
+
     // Defines form elements to set map height.
     'height' => array(
       '#type' => 'container',
@@ -566,6 +581,7 @@ class EcMapeditorMapSettings {
       ),
       'show_author' => FALSE,
       'show_settings' => FALSE,
+      'fields_in_popup' => NULL,
     );
   }
 
