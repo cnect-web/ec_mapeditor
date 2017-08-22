@@ -116,7 +116,7 @@ function ec_mapeditor_node_field_formatter_view($entity_type, $entity, $field, $
         }
         else {
 
-          $popup_content = "";
+          $popup_content = "<div class='node-page-popup-content-wrapper'>";
           $popup_field = explode(',', $fields_in_popup);
 
           foreach ($popup_field as $field_name) {
@@ -129,6 +129,7 @@ function ec_mapeditor_node_field_formatter_view($entity_type, $entity, $field, $
             }
           }
 
+          $popup_content .= '</div>';
           // Those fields ([title],[popup]) are mandatory to display a popup.
           $field_items[0]['title'] = 'Node popup';
           $field_items[0]['popup'] = $popup_content;
