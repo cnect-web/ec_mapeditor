@@ -111,7 +111,7 @@ function ec_mapeditor_node_field_formatter_view($entity_type, $entity, $field, $
 
         // Display popup content on node page EC_mapeditor field formatter.
         $fields_in_popup = $display['settings']['fields_in_popup']['fields_in_popup'];
-        if (NULL === $fields_in_popup) {
+        if (NULL == $fields_in_popup) {
           $layer_settings['popup']['show_popup'] = FALSE;
         }
         else {
