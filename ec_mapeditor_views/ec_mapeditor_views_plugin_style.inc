@@ -155,11 +155,13 @@ class EcMapeditorViewsPluginStyle extends views_plugin_style {
       );
     }
 
+    $hide_map = (isset($this->options['hide_empty'])) ? $this->options['hide_empty'] : 1;
+
     $form['hide_empty'] = array(
       '#title' => t('Hide empty'),
       '#type' => 'checkbox',
       '#description' => t('Hide the Mapeditor map if there are no results to display.'),
-      '#default_value' => isset($this->options['hide_empty']) ? $this->options['hide_empty'] : FALSE,
+      '#default_value' => $hide_map,
     );
 
     // Fetches more settings form elements.
