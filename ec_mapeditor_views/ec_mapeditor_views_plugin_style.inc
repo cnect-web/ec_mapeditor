@@ -228,6 +228,7 @@ class EcMapeditorViewsPluginStyle extends views_plugin_style {
       $settings->settings['fitbounds'] = $this->options['center']['fitbounds'];
       $settings->settings['cluster_markers'] = $this->options['clustering']['cluster_markers'];
       $settings->settings['icon'] = $this->options['icon']['icon'];
+      $this->options['hide_empty'] = (!isset($this->options['hide_empty'])) ? 1 : $this->options['hide_empty'];
       if (count($features['features']) == 0 && $this->options['hide_empty']) {
         return '';
       }
