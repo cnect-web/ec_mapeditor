@@ -579,6 +579,7 @@ class EcMapeditorMapSettings {
       'icon' => array(
         'icon' => 'blue',
       ),
+      'show_disclaimer' => FALSE,
       'show_author' => FALSE,
       'show_settings' => FALSE,
       'fields_in_popup' => NULL,
