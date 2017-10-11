@@ -71,6 +71,20 @@ L.custom = {
     // Bounds map to markers.
     if (typeof Drupal.settings.features != 'undefined') {
       marker.fitBounds(Drupal.settings.features);
+
+      // Bound markers when clicking on Popup Close icon.
+      document.getElementsByClassName('leaflet-close')[0].addEventListener("click", function(e) {
+        if (typeof marker.fitBounds(Drupal.settings.features) != 'undefined') {
+            marker.fitBounds(Drupal.settings.features);
+        }
+      }, false);
+
+      // Bound markers when clicking on Home icon.
+      document.getElementsByClassName('leaflet-home')[0].addEventListener("click", function (e) {
+        if (typeof marker.fitBounds(Drupal.settings.features) != 'undefined') {
+            marker.fitBounds(Drupal.settings.features).closePopup();
+        }
+      }, false);
     }
 
     // Processes the next component.

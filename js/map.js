@@ -72,7 +72,17 @@ L.custom = {
     if (settings.center.fitbounds == true) {
       // Node and CSV layers are bound as a group.
       if (typeof group != 'undefined') {
+
         map.fitBounds(group.getBounds(), {padding: [30, 30]});
+
+        // Bound markers when clicking on Home icon.
+        document.getElementsByClassName('leaflet-home')[0].onclick = function () {
+          document.getElementsByClassName('leaflet-close')[0].click();
+        };
+        // Bound markers when clicking on Popup Close icon.
+        document.getElementsByClassName('leaflet-close')[0].addEventListener("click", function (e) {
+            map.fitBounds(group.getBounds(), {padding: [30, 30]});
+        }, false);
       }
 
       // Fits map to bounds of url layers (different from other layers). URL
