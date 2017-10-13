@@ -80,11 +80,9 @@ L.custom = {
       }, false);
 
       // Bound markers when clicking on Home icon.
-      document.getElementsByClassName('leaflet-home')[0].addEventListener("click", function (e) {
-        if (typeof marker.fitBounds(Drupal.settings.features) != 'undefined') {
-            marker.fitBounds(Drupal.settings.features).closePopup();
-        }
-      }, false);
+      document.getElementsByClassName('leaflet-home')[0].onclick = function () {
+        document.getElementsByClassName('leaflet-close')[0].click();
+      };
     }
 
     // Processes the next component.
