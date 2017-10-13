@@ -81,7 +81,7 @@ L.custom = {
 
       // Bound markers when clicking on Home icon.
       document.getElementsByClassName('leaflet-home')[0].onclick = function () {
-          document.getElementsByClassName('leaflet-close')[0].click();
+        document.getElementsByClassName('leaflet-close')[0].click();
       };
     }
 
