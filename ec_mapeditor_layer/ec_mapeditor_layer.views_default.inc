@@ -34,7 +34,6 @@ function ec_mapeditor_layer_views_default_views() {
   $handler->display->display_options['header']['area']['table'] = 'views';
   $handler->display->display_options['header']['area']['field'] = 'area';
   $handler->display->display_options['header']['area']['empty'] = FALSE;
-  $handler->display->display_options['header']['area']['content'] = '<a href="<?php print url(\'admin/structure/map-layer/add\'); ?>>Add Map layer</a>';
   $handler->display->display_options['header']['area']['format'] = 'full_html';
   $handler->display->display_options['header']['area']['tokenize'] = 0;
   /* Relationship: Map layer: Author */

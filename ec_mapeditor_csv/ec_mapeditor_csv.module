@@ -71,11 +71,11 @@ function ec_mapeditor_csv_features($data) {
       'type' => 'Feature',
       'properties' => array(
         'name' => $name,
-        'popupContent' => theme('popup', array(
+        'popupContent' => array(
           'title' => $name,
           'description' => $description,
           'url' => $url,
-        )),
+        ),
       ),
       'geometry' => array(
         'type' => 'Point',

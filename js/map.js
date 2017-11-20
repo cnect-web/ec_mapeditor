@@ -9,21 +9,24 @@ L.custom = {
 
     // Sets variables from Drupal JS settings.
     var settings = Drupal.settings.settings;
+    if (typeof Drupal.settings.mapeditor_map != 'undefined') {
+      var mapeditor_map = Drupal.settings.mapeditor_map;
+    }
+
+    var default_settings = {
+      "center": [settings.center.lat, settings.center.lon],
+      "zoom": settings.zoom.initialZoom,
+      "minZoom": settings.zoom.minZoom,
+      "maxZoom": settings.zoom.maxZoom,
+      "dragging": settings.dragging,
+      "touchZoom": settings.touchZoom,
+      "scrollWheelZoom": settings.scrollWheelZoom
+    };
 
     // Defines map height.
     obj.style.minHeight = settings.height.height + 'px';
 
-    // Defines the map.
-    var map = L.map(obj, {
-        "center": [settings.center.lat, settings.center.lon],
-        "zoom": settings.zoom.initialZoom,
-        "minZoom": settings.zoom.minZoom,
-        "maxZoom": settings.zoom.maxZoom,
-        "dragging": settings.dragging,
-        "touchZoom": settings.touchZoom,
-        "scrollWheelZoom": settings.scrollWheelZoom
-      }
-    );
+    var map = L.map(obj, default_settings);
 
     // Creates the tile layer in the map.
     var options = [];
@@ -32,6 +35,11 @@ L.custom = {
     // @todo fix attribution mess.
     if (settings.attribution.attributionControl == 1) {
       options.attribution = settings.attribution.attribution;
+    }
+
+    // Hide Show disclaimer of the map.
+    if (settings.show_disclaimer == '0') {
+      document.getElementById('leaflet-disclaimer').style.display = 'none';
     }
 
     var tiles = L.wt.tileLayer(settings.tiles.tiles, options).addTo(map);
@@ -56,16 +64,25 @@ L.custom = {
       for (var i = 0; i < arrayLength; i++) {
 
         // @todo check possible issue addlayer vs addto
-        // map.addLayer(layers_to_enable[i].layer);.
         layers_to_enable[i].layer.addTo(map);
       }
     }
 
     // Bounds map to markers, if set and if there is a group.
-    if (settings.center.fitbounds == '1') {
+    if (settings.center.fitbounds == true) {
       // Node and CSV layers are bound as a group.
       if (typeof group != 'undefined') {
+
         map.fitBounds(group.getBounds(), {padding: [30, 30]});
+
+        // Bound markers when clicking on Home icon.
+        document.getElementsByClassName('leaflet-home')[0].onclick = function () {
+          document.getElementsByClassName('leaflet-close')[0].click();
+        };
+        // Bound markers when clicking on Popup Close icon.
+        document.getElementsByClassName('leaflet-close')[0].addEventListener("click", function (e) {
+            map.fitBounds(group.getBounds(), {padding: [30, 30]});
+        }, false);
       }
 
       // Fits map to bounds of url layers (different from other layers). URL

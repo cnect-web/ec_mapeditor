@@ -8,7 +8,7 @@
 /**
  * Extends creation and displaying map layer entity.
  */
-class MapLayerController extends EntityAPIController {
+class EcMapeditorLayerController extends EntityAPIController {
 
   /**
    * Extends creation of map layer entity.
@@ -92,7 +92,7 @@ class MapLayerController extends EntityAPIController {
 /**
  * Extends create and save functions of map layer type entity.
  */
-class MapLayerTypeController extends EntityAPIControllerExportable {
+class EcMapeditorLayerTypeController extends EntityAPIControllerExportable {
 
   /**
    * Create map layer type.
@@ -122,7 +122,7 @@ class MapLayerTypeController extends EntityAPIControllerExportable {
 /**
  * UI controller for map layer type.
  */
-class MapLayerTypeUIController extends EntityDefaultUIController {
+class EcMapeditorLayerTypeUIController extends EntityDefaultUIController {
 
   /**
    * Overrides hook_menu() defaults.
@@ -140,7 +140,7 @@ class MapLayerTypeUIController extends EntityDefaultUIController {
 /**
  * Map layer class.
  */
-class MapLayer extends Entity {
+class EcMapeditorLayer extends Entity {
 
   /**
    * Provides the label for the map layer entity.
@@ -161,7 +161,7 @@ class MapLayer extends Entity {
 /**
  * Map layer type class.
  */
-class MapLayerType extends Entity {
+class EcMapeditorLayerType extends Entity {
   public $type;
   public $label;
   public $weight = 0;
@@ -185,7 +185,7 @@ class MapLayerType extends Entity {
 /**
  * Defines the inline entity form for the map layer entity.
  */
-class MapLayerInlineEntityFormController extends EntityInlineEntityFormController {
+class EcMapeditorLayerInlineEntityFormController extends EntityInlineEntityFormController {
 
   /**
    * Overrides EntityInlineEntityFormController::entityForm().
@@ -200,7 +200,7 @@ class MapLayerInlineEntityFormController extends EntityInlineEntityFormControlle
     $map_layer = $entity_form['#entity'];
 
     // Loads settings.
-    $settings = new MapLayerSettings();
+    $settings = new EcMapeditorLayerSettings();
     if (!empty($map_layer->settings)) {
       $settings->customize(drupal_json_decode($map_layer->settings));
     }

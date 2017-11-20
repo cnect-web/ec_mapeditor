@@ -37,7 +37,7 @@ function map_form($form, &$form_state, $map) {
   );
 
   // Provides a field to store various map settings.
-  $settings = new MapSettings();
+  $settings = new EcMapeditorMapSettings();
   if (!empty($map->settings)) {
     $settings->customize(drupal_json_decode($map->settings));
   }
@@ -45,6 +45,21 @@ function map_form($form, &$form_state, $map) {
   // @todo. how to prevent this?
   $settings = $settings->settings;
 
+  // Provides a checkbox to show /hide Disclaimer.
+  $form['show_disclaimer'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Show Disclaimer'),
+    '#default_value' => $settings['show_disclaimer'],
+    '#weight' => 96,
+  );
+
+  // Provides a checkbox to show /hide Author.
+  $form['show_author'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Show Author'),
+    '#default_value' => $settings['show_author'],
+    '#weight' => 97,
+  );
   // Provides a checkbox to show /hide settings field.
   $form['show_settings'] = array(
     '#type' => 'checkbox',

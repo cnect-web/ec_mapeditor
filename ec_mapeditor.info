@@ -7,8 +7,7 @@ dependencies[] = views
 dependencies[] = inline_entity_form
 dependencies[] = entityreference
 files[] = ec_mapeditor.controller.inc
-project path = profiles/common/modules/features/ec_mapeditor
-multisite_version = 2.1
+multisite_version = 2.2
 package = Maps
 php = 5.2.4
 

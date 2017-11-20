@@ -7,7 +7,7 @@
 /**
  * Provides map entity properties and content.
  */
-class MapController extends EntityAPIController {
+class EcMapeditorController extends EntityAPIController {
 
   /**
    * Creates map entity and adds common properties such as author.
@@ -29,7 +29,6 @@ class MapController extends EntityAPIController {
    */
   public function buildContent($entity, $view_mode = 'full', $langcode = NULL, $content = array()) {
     $wrapper = entity_metadata_wrapper('map', $entity);
-    $content['author'] = array('#markup' => t('Created by: !author', array('!author' => $wrapper->uid->name->value(array('sanitize' => TRUE)))));
 
     // Sets defaults for theming properties like fields.
     $field_defaults = array(
@@ -55,14 +54,17 @@ class MapController extends EntityAPIController {
       ),
     ) + $field_defaults;
 
-    $settings = new MapSettings();
+    $settings = new EcMapeditorMapSettings();
     $settings->customize(drupal_json_decode($wrapper->settings->value()));
 
     // @todo prevent this.
     $settings = $settings->settings;
+    if ($settings['show_author']) {
+      $content['author'] = array('#markup' => t('Created by: !author', array('!author' => $wrapper->uid->name->value(array('sanitize' => TRUE)))));
+    }
 
     // Creates the render array for the map.
-    $map = new MapBuild($settings);
+    $map = new EcMapeditorMapBuild($settings);
 
     // Adds custom JavaScripts defined by the map layers.
     // @todo figure out how to pass only the active map layer's js.
@@ -82,6 +84,7 @@ class MapController extends EntityAPIController {
 
     $ec_mapeditor_js = base_path() . drupal_get_path('module', 'ec_mapeditor') . "/js/map.js?v=" . rand(0, 33333);
     $custom_js[] = $ec_mapeditor_js;
+
     $map->setMoreCustomJs($custom_js);
     $content['map'] = $map->build;
     return parent::buildContent($entity, $view_mode, $langcode, $content);
@@ -92,7 +95,7 @@ class MapController extends EntityAPIController {
 /**
  * Extends entity for map.
  */
-class Map extends Entity {
+class EcMapeditorMap extends Entity {
 
   /**
    * Provides default label.
@@ -113,7 +116,7 @@ class Map extends Entity {
 /**
  * UI controller for map layer type.
  */
-class MapUIController extends EntityDefaultUIController {
+class EcMapeditorMapUIController extends EntityDefaultUIController {
 
   // @codingStandardsIgnoreStart
   /**
@@ -134,7 +137,7 @@ class MapUIController extends EntityDefaultUIController {
  * This class constructs the build Drupal render array with the necessary
  * JavaScript and markup for the EC map service.
  */
-class MapBuild {
+class EcMapeditorMapBuild {
 
   // Holds filename of custom JavaScript to be passed to load.js.
   private $customJs;
@@ -142,7 +145,7 @@ class MapBuild {
   /**
    * Defines defaults for the map construction (both geofield and NUTS).
    */
-  public function __construct($settings) {
+  public function __construct($settings, $map = NULL) {
     $this->build = array();
 
     // Loads map service via load.js (general JavaScript service).
@@ -158,6 +161,7 @@ class MapBuild {
     $this->build['#attached']['js'][] = array(
       'data' => array(
         'settings' => $settings,
+        'mapeditor_map' => $map,
       ),
       'type' => 'setting',
     );
@@ -166,7 +170,7 @@ class MapBuild {
   /**
    * Sets filename of custom JavaScript to be passed to load.js.
    *
-   * @ todo. synch with setMoreCustomJs. Check if still in use.
+   * @todo. synch with setMoreCustomJs. Check if still in use.
    */
   public function setCustomJs($custom_js) {
     $this->customJs = $custom_js;

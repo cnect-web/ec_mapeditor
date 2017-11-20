@@ -7,6 +7,11 @@
 
 /**
  * Handles submit creating and editing map layer_type.
+ *
+ * @param array $form
+ *   Provides form values to update form_state.
+ * @param array $form_state
+ *   Form state of the entity that must be updated.
  */
 function ec_mapeditor_layer_type_form_submit(&$form, &$form_state) {
   $map_layer_type = entity_ui_form_submit_build_entity($form, $form_state);
@@ -20,6 +25,11 @@ function ec_mapeditor_layer_type_form_submit(&$form, &$form_state) {
 
 /**
  * Redirects to the deletion confirmation form.
+ *
+ * @param array $form
+ *   Provides form values to update form_state.
+ * @param array $form_state
+ *   Form state of the entity that must be updated.
  */
 function ec_mapeditor_layer_type_form_submit_delete(&$form, &$form_state) {
   $form_state['redirect'] = 'admin/structure/map-layer-types/' . $form_state['map_layer_type']->type . '/delete';
@@ -27,6 +37,16 @@ function ec_mapeditor_layer_type_form_submit_delete(&$form, &$form_state) {
 
 /**
  * Defines map layer type deletion form.
+ *
+ * @param array $form
+ *   Provides form values to update form_state.
+ * @param array $form_state
+ *   Form state of the entity that must be updated.
+ * @param object $map_layer_type
+ *   Map Layer Entity object.
+ *
+ * @return The form array
+ *   Form to delete the map layer.
  */
 function ec_mapeditor_layer_type_form_delete_confirm($form, &$form_state, $map_layer_type) {
   $form_state['map_layer_type'] = $map_layer_type;
@@ -47,6 +67,11 @@ function ec_mapeditor_layer_type_form_delete_confirm($form, &$form_state, $map_l
 
 /**
  * Handles map layer type deletion form submission.
+ *
+ * @param array $form
+ *   Provides form values to update form_state.
+ * @param array $form_state
+ *   Form state of the entity that must be updated.
  */
 function ec_mapeditor_layer_type_form_delete_confirm_submit($form, &$form_state) {
   $map_layer_type = $form_state['map_layer_type'];
@@ -65,6 +90,9 @@ function ec_mapeditor_layer_type_form_delete_confirm_submit($form, &$form_state)
 
 /**
  * Provides page to select map layer type to add new map layer.
+ *
+ * @return The list array
+ *   Link to new map layer form.
  */
 function ec_mapeditor_layer_admin_add_page() {
   $items = array();
@@ -82,6 +110,12 @@ function ec_mapeditor_layer_admin_add_page() {
 
 /**
  * Add new map layer page callback.
+ *
+ * @param string $type
+ *   Type name of Map Layer.
+ *
+ * @return Form
+ *   Create Map Layer Form
  */
 function ec_mapeditor_layer_add($type) {
   $map_layer_type = ec_mapeditor_layer_types($type);
@@ -93,6 +127,11 @@ function ec_mapeditor_layer_add($type) {
 
 /**
  * Handles map layer form submission.
+ *
+ * @param array $form
+ *   Provides form values to update form_state.
+ * @param array $form_state
+ *   Form state of the entity that must be updated.
  */
 function ec_mapeditor_layer_form_submit($form, &$form_state) {
   $map_layer = $form_state['map_layer'];
@@ -108,7 +147,7 @@ function ec_mapeditor_layer_form_submit($form, &$form_state) {
   $settings = _ec_mapeditor_layer_save_settings($settings, $form_state);
 
   // Formats settings in json.
-  $map_layer->settings = json_encode($settings);
+  $map_layer->settings = drupal_json_encode($settings);
 
   // Saves the map.
   ec_mapeditor_layer_save($map_layer);
@@ -121,6 +160,11 @@ function ec_mapeditor_layer_form_submit($form, &$form_state) {
 
 /**
  * Loads deletion confirmation form.
+ *
+ * @param array $form
+ *   Provides form values to update form_state.
+ * @param array $form_state
+ *   Form state of the entity that must be updated.
  */
 function ec_mapeditor_layer_form_submit_delete($form, &$form_state) {
   $map_layer = $form_state['map_layer'];
@@ -130,6 +174,14 @@ function ec_mapeditor_layer_form_submit_delete($form, &$form_state) {
 
 /**
  * Defines deletion confirmation form.
+ *
+ * @param array $form
+ *   Provides form values to update form_state.
+ * @param array $form_state
+ *   Form state of the entity that must be updated.
+ *
+ * @return Form
+ *   Form to delete the map layer Type.
  */
 function ec_mapeditor_layer_delete_form($form, &$form_state, $map_layer) {
   $form_state['map_layer'] = $map_layer;
@@ -150,10 +202,15 @@ function ec_mapeditor_layer_delete_form($form, &$form_state, $map_layer) {
 
 /**
  * Handles deletion form submission.
+ *
+ * @param array $form
+ *   Provides form values to update form_state.
+ * @param array $form_state
+ *   Form state of the entity that must be updated.
  */
 function ec_mapeditor_layer_delete_form_submit($form, &$form_state) {
   $map_layer = $form_state['map_layer'];
   ec_mapeditor_layer_delete($map_layer);
   drupal_set_message(t('Map layer %title deleted.', array('%title' => entity_label('map_layer', $map_layer))));
-  $form_state['redirect'] = '<front>';
+  $form_state['redirect'] = 'admin/structure/map-layer';
 }

@@ -13,7 +13,7 @@ function ec_mapeditor_node_field_formatter_info() {
   if (module_exists('geofield') || module_exists('nexteuropa_geofield')) {
 
     // Fetches default settings.
-    $settings = new MapSettings();
+    $settings = new EcMapeditorMapSettings();
 
     // @todo. how to prevent this?
     $settings = $settings->settings;
@@ -29,6 +29,7 @@ function ec_mapeditor_node_field_formatter_info() {
         'icon' => $settings['icon'],
         'center' => $settings['center'],
         'attribution' => $settings['attribution'],
+        'fields_in_popup' => $settings['fields_in_popup'],
       ),
     );
   }
@@ -41,18 +42,18 @@ function ec_mapeditor_node_field_formatter_info() {
 function ec_mapeditor_node_field_formatter_settings_form($field, $instance, $view_mode, $form, &$form_state) {
   $display = $instance['display'][$view_mode];
   $settings = $display['settings'];
-  $element = array();
 
   // Defines formatter settings form by using shared form elements.
-  if ($display['type'] == 'ec_webtools_map') {
-    $element['tiles'] = _ec_mapeditor_form_elements('tiles', $settings);
-    $element['height'] = _ec_mapeditor_form_elements('height', $settings);
-    $element['zoom'] = _ec_mapeditor_form_elements('zoom', $settings);
-    $element['icon'] = _ec_mapeditor_map_form_elements('icon', $settings);
-    $element['center'] = _ec_mapeditor_form_elements('center', $settings);
-    $element['attribution'] = _ec_mapeditor_form_elements('attribution', $settings);
-  }
-  return $element;
+  $elements = array(
+    'tiles',
+    'height',
+    'zoom',
+    'icon',
+    'center',
+    'attributions',
+    'fields_in_popup',
+  );
+  return _ec_mapeditor_custom_map_form_elements($elements, $settings);
 }
 
 /**
@@ -107,11 +108,40 @@ function ec_mapeditor_node_field_formatter_view($entity_type, $entity, $field, $
 
       // Processes geo data from geofield.
       if ($field['type'] == 'geofield') {
-        $features = _ec_mapeditor_node_prepare_features($field_items);
 
+        // Display popup content on node page EC_mapeditor field formatter.
+        $fields_in_popup = $display['settings']['fields_in_popup']['fields_in_popup'];
+        if (NULL == $fields_in_popup) {
+          $layer_settings['popup']['show_popup'] = FALSE;
+        }
+        else {
+
+          $popup_content = "<div class='node-page-popup-content-wrapper'>";
+          $popup_field = explode(',', $fields_in_popup);
+
+          foreach ($popup_field as $field_name) {
+            if ($field_name == 'title') {
+              $popup_content .= '<h2 class="node-page-popup-title">' . $entity->title . '</h2>';
+            }
+            else {
+              $field_view = field_view_field($entity_type, $entity, trim($field_name), 'full');
+              $popup_content .= drupal_render($field_view);
+            }
+          }
+
+          $popup_content .= '</div>';
+          // Those fields ([title],[popup]) are mandatory to display a popup.
+          $field_items[0]['title'] = 'Node popup';
+          $field_items[0]['popup'] = $popup_content;
+
+          // Show popin window.
+          $layer_settings['popup']['show_popup'] = TRUE;
+          $layer_settings['popup']['popin'] = TRUE;
+        }
+
+        $features = _ec_mapeditor_node_prepare_features($field_items);
         // Disables popup for the field formatter because there is no pop up
         // information in the geofield.
-        $layer_settings['popup']['show_popup'] = FALSE;
       }
 
       // Processes geo data from nexteuropa geofield.
@@ -147,7 +177,7 @@ function ec_mapeditor_node_field_formatter_view($entity_type, $entity, $field, $
       );
 
       // Defines the map settings.
-      $map_settings = new MapSettings();
+      $map_settings = new EcMapeditorMapSettings();
 
       // Fetches map settings from display settings.
       $custom_map_settings = array(
@@ -171,7 +201,7 @@ function ec_mapeditor_node_field_formatter_view($entity_type, $entity, $field, $
       $map_settings = $map_settings->settings;
 
       // Creates the render array for the map.
-      $map = new MapBuild($map_settings);
+      $map = new EcMapeditorMapBuild($map_settings);
 
       // Defines the custom JavaScripts for the webtools JS map library.
       $node_layer_js = base_path() . drupal_get_path('module', 'ec_mapeditor_node') . "/js/node_layer.js?v=" . rand(0, 33333);

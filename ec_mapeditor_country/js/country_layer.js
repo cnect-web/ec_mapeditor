@@ -58,7 +58,9 @@ if (typeof Drupal.settings.country_layers !== 'undefined') {
           click: function (e) {
 
             // @todo implement webtools method of linking.
-            window.location.href = countries[code].url;
+            if (typeof countries[code].url != 'undefined') {
+              window.location.href = countries[code].url;
+            }
           }
         };
         layer.on({

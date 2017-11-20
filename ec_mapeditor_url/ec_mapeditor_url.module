@@ -10,12 +10,11 @@
  * See MapLayerController->buildContent();
  */
 function ec_mapeditor_url_layer_content_alter(&$content, $wrapper, $entity) {
-
   // Fetches map data from URL layer.
   if ($entity->type == 'url_layer') {
     $settings = drupal_json_decode($wrapper->settings->value());
     if (_ec_mapeditor_layer_fieldcheck('map_url', $wrapper)) {
-      foreach ($wrapper->map_url->getIterator() as $delta => $item) {
+      foreach ($wrapper->map_url->getIterator() as $item) {
         $urls[] = $item->url->value();
       }
       $layers[] = array(

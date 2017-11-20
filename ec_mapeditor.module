@@ -8,6 +8,7 @@ define('EC_MAPEDITOR_WEBTOOLS_ENVIRONMENT', '//europa.eu/webtools/load.js');
 
 // Includes code with function names that do not comply with standards.
 module_load_include('inc', 'ec_mapeditor', 'ec_mapeditor.misc');
+module_load_include('inc', 'ec_mapeditor', 'ec_mapeditor.forms');
 
 /**
  * Implements hook_entity_info().
@@ -16,8 +17,8 @@ function ec_mapeditor_entity_info() {
   $return = array(
     'map' => array(
       'label' => t('Map'),
-      'entity class' => 'Map',
-      'controller class' => 'MapController',
+      'entity class' => 'EcMapeditorMap',
+      'controller class' => 'EcMapeditorController',
       'base table' => 'map',
       'fieldable' => TRUE,
       'entity keys' => array(
@@ -25,7 +26,7 @@ function ec_mapeditor_entity_info() {
       ),
       'admin ui' => array(
         'path' => 'admin/structure/maps',
-        'controller class' => 'MapUIController',
+        'controller class' => 'EcMapeditorMapUIController',
         'menu wildcard' => '%map',
         'file' => 'ec_mapeditor.admin.inc',
       ),
@@ -127,6 +128,16 @@ function ec_mapeditor_menu() {
 }
 
 /**
+ * Implements hook_menu_alter().
+ */
+function ec_mapeditor_menu_alter(&$items) {
+  // Map Layer Types should not be created nor managed by the user.
+  if (isset($items['admin/structure/map-layer-types'])) {
+    $items['admin/structure/map-layer-types']['access callback'] = FALSE;
+  }
+}
+
+/**
  * Implements hook_permission().
  */
 function ec_mapeditor_permission() {
@@ -186,12 +197,18 @@ function ec_mapeditor_entity_property_info_alter(&$info) {
   );
 }
 
-/*******************************************************************************
- ********************************* Map API's **********************************
- ******************************************************************************/
-
 /**
  * Access callback for map.
+ *
+ * @param string $op
+ *   Operation being performed.
+ * @param object $map
+ *   Map entity object.
+ * @param string $account
+ *   The account to check.
+ *
+ * @return bool
+ *   Boolean TRUE if user has requested permission.
  */
 function ec_mapeditor_access($op, $map, $account = NULL, $entity_type = NULL) {
   global $user;
@@ -217,6 +234,14 @@ function ec_mapeditor_access($op, $map, $account = NULL, $entity_type = NULL) {
 
 /**
  * Loads a map.
+ *
+ * @param int $mid
+ *   The map entity ID.
+ * @param bool $reset
+ *   Reset the internal cache for the requested entity type.
+ *
+ * @return array
+ *   The firs map entity object stored in the Array returned by entity_load().
  */
 function ec_mapeditor_load($mid, $reset = FALSE) {
   $maps = ec_mapeditor_load_multiple(array($mid), array(), $reset);
@@ -225,6 +250,16 @@ function ec_mapeditor_load($mid, $reset = FALSE) {
 
 /**
  * Loads multiple maps based on certain conditions.
+ *
+ * @param array $mids
+ *   Array with map entity IDs.
+ * @param array $conditions
+ *   Associative Array of conditions on the base table.
+ * @param bool $reset
+ *   Reset the internal cache for the requested entity type.
+ *
+ * @return array
+ *   Array of entity objects indexed by their ids (see entity_load()).
  */
 function ec_mapeditor_load_multiple($mids = array(), $conditions = array(), $reset = FALSE) {
   return entity_load('map', $mids, $conditions, $reset);
@@ -232,6 +267,9 @@ function ec_mapeditor_load_multiple($mids = array(), $conditions = array(), $res
 
 /**
  * Deletes single map.
+ *
+ * @param object $map
+ *   The map entity object to delete.
  */
 function _ec_mapeditor_delete_map($map) {
   entity_delete('map', entity_id('map', $map));
@@ -239,6 +277,9 @@ function _ec_mapeditor_delete_map($map) {
 
 /**
  * Deletes multiple maps.
+ *
+ * @param object $map_ids
+ *   IDs of the map entities to delete.
  */
 function ec_mapeditor_delete_map_multiple($map_ids) {
   entity_delete_multiple('map', $map_ids);
@@ -300,6 +341,21 @@ function ec_mapeditor_map_form_elements() {
         '#title' => t('Tiles'),
         '#description' => t('Tiles to use a map background'),
         '#options' => _ec_mapeditor_tiles(),
+      ),
+    ),
+
+    // Defines form elements to choose background map images (tiles).
+    'fields_in_popup' => array(
+      '#type' => 'fieldset',
+      '#title' => t('Single Node Popup'),
+      '#weight' => 30,
+      'fields_in_popup' => array(
+        '#type' => 'textfield',
+        '#size' => 80,
+        '#placeholder' => 'title, field_description, field_coordinates',
+        '#title' => t('Fields in Popup'),
+        '#description' => t('Fields to show within the Popup window on single node page. <br /> 
+            Use CSV format. Example: title, field_description, field_address, ... '),
       ),
     ),
 
@@ -378,6 +434,17 @@ function ec_mapeditor_map_form_elements() {
         '#size' => 80,
       ),
     ),
+
+    // Defines form element to control disclaimer.
+    'disclaimer' => array(
+      '#type' => 'fieldset',
+      '#title' => t('Disclaimer'),
+      '#weight' => 17,
+      'disclaimerControl' => array(
+        '#type' => 'checkbox',
+        '#title' => t('HIde disclaimer'),
+      ),
+    ),
   );
   return $form_elements;
 }
@@ -417,6 +484,24 @@ function ec_mapeditor_validate_height(&$form, &$form_state) {
 }
 
 /**
+ * Validate zoom values.
+ */
+function _ec_mapeditor_validate_zoom($form, &$form_state) {
+
+  $element = "";
+
+  $max_zoom = isset($form_state['values']['max_zoom'][LANGUAGE_NONE]) ? $form_state['values']['max_zoom'][LANGUAGE_NONE][0]['value'] : NULL;
+
+  $min_zoom = isset($form_state['values']['min_zoom'][LANGUAGE_NONE]) ? $form_state['values']['min_zoom'][LANGUAGE_NONE][0]['value'] : NULL;
+
+  if (isset($max_zoom) && $max_zoom != "-1" && isset($min_zoom)) {
+    if ($max_zoom > $min_zoom) {
+      form_error($element, t('The minimum zoom setting must be less than or equal to the maximum zoom setting'));
+    }
+  }
+}
+
+/**
  * Saves map entity.
  *
  * Collects map values for storing as JSON in settings.
@@ -448,9 +533,11 @@ function _ec_mapeditor_save_map($map) {
       'attributionControl' => $map->attributionControl,
       'attribution' => $map->attribution,
     ),
+    'show_disclaimer' => $map->show_disclaimer,
+    'show_author' => $map->show_author,
     'show_settings' => $map->show_settings,
   );
-  $map->settings = json_encode($settings);
+  $map->settings = drupal_json_encode($settings);
   $map->changed = REQUEST_TIME;
   entity_save('map', $map);
 }
@@ -458,7 +545,7 @@ function _ec_mapeditor_save_map($map) {
 /**
  * Class providing JavaScript settings for a map.
  */
-class MapSettings {
+class EcMapeditorMapSettings {
 
   /**
    * Provides the settings array and default values.
@@ -492,7 +579,10 @@ class MapSettings {
       'icon' => array(
         'icon' => 'blue',
       ),
+      'show_disclaimer' => FALSE,
+      'show_author' => FALSE,
       'show_settings' => FALSE,
+      'fields_in_popup' => NULL,
     );
   }
 

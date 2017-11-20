@@ -10,10 +10,10 @@ if (typeof layers_to_control != 'undefined') {
 
     // Defines layers control.
     var layersControl = [
-    {
-      "label": "Layers",
-      "checkbox": layers_to_control
-    }
+      {
+        "label": "Layers",
+        "checkbox": layers_to_control
+      }
     ];
 
     // Hides the layers panel by default.

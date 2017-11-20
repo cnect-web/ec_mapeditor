@@ -54,7 +54,7 @@ if (typeof Drupal.settings.node_layers !== 'undefined') {
           popup_content = buildPopupContent(feature);
 
           // Uses the leaflet default pop-up.
-          layer.bindPopup(feature.properties.popupContent);
+          layer.bindPopup(popup_content);
         }
       }
     }

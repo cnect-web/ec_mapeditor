@@ -84,7 +84,7 @@ function map_layer_form($form, &$form_state, $map_layer) {
   $form_state['map_layer'] = $map_layer;
 
   // Loads settings.
-  $settings = new MapLayerSettings();
+  $settings = new EcMapeditorLayerSettings();
   if (!empty($map_layer->settings)) {
     $settings->customize(drupal_json_decode($map_layer->settings));
   }
@@ -107,7 +107,6 @@ function map_layer_form($form, &$form_state, $map_layer) {
     '#default_value' => $map_layer->description,
   );
   // @todo. figure out what are map layer defaults.
-
   // Provides checkboxes to define how the layer is shown in the layer control.
   $control_form_element = _ec_mapeditor_custom_map_form_elements(array('control'), $settings);
   $form += $control_form_element;
