@@ -5,7 +5,7 @@ Custom CSS specific for EC Mapeditor module.
 
 DESCRIPTION OF THE SCOPE:
   In some cases (like in Digital Single Market) it's necessary to hide the default link to entity node page.
-  When this append, usually with the CSS rule:
+  When this append, usually the link is removed with the CSS rule:
   .entity-map h2 { display: none; }
   it's necessary to assure the tags H2 within the map (PopIn and PopUp windows) are not affected by the previous
   'too generic' rule.
