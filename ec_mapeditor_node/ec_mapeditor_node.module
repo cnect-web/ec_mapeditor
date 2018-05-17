@@ -327,7 +327,6 @@ function _ec_mapeditor_node_prepare_features($items = array()) {
  */
 function ec_mapeditor_node_map_layer_settings_alter(&$settings, $map_layer) {
   if ($map_layer->type == 'node_layer') {
-    $settings['attribution'] = $map_layer->attribution;
     $settings['popup'] = $map_layer->popup;
     $settings['icon'] = $map_layer->icon;
     $settings['control'] = $map_layer->control;
@@ -348,7 +347,6 @@ function ec_mapeditor_node_map_layer_settings_alter(&$settings, $map_layer) {
 function ec_mapeditor_node_stand_alone_map_layer_settings_alter(&$settings, $form_state) {
   if ($form_state['map_layer']->type == 'node_layer') {
     $values = $form_state['values'];
-    $settings['attribution'] = $values['attribution'];
     $settings['popup'] = $values['popup'];
     $settings['icon'] = $values['icon'];
     $settings['control'] = $values['control'];
@@ -371,7 +369,6 @@ function ec_mapeditor_node_layer_info() {
       'form_elements' => array(
         'popup',
         'clustering',
-        'attribution',
         'icon',
         'node_filters',
         'term_filters',

@@ -30,7 +30,6 @@ if (typeof Drupal.settings.tile_layers !== 'undefined') {
     var id = tile_layers[i].id;
 
     var options = [];
-    options.attribution = tile_layers[i].label;
 
     // Defines some tiles that arent supported in L.wt.tileLayer yet.
     switch (tile_layers[i].layer_settings.tiles.tiles) {

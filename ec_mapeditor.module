@@ -419,22 +419,6 @@ function ec_mapeditor_map_form_elements() {
       ),
     ),
 
-    // Defines form elements to set and control attribution (credits).
-    'attribution' => array(
-      '#type' => 'fieldset',
-      '#title' => t('Attribution'),
-      '#weight' => 16,
-      'attributionControl' => array(
-        '#type' => 'checkbox',
-        '#title' => t('Show attribution'),
-      ),
-      'attribution' => array(
-        '#type' => 'textfield',
-        '#title' => t('Attribution text'),
-        '#size' => 80,
-      ),
-    ),
-
     // Defines form element to control disclaimer.
     'disclaimer' => array(
       '#type' => 'fieldset',
@@ -528,10 +512,6 @@ function _ec_mapeditor_save_map($map) {
       'initialZoom' => $map->initialZoom,
       'minZoom' => $map->minZoom,
       'maxZoom' => $map->maxZoom,
-    ),
-    'attribution' => array(
-      'attributionControl' => $map->attributionControl,
-      'attribution' => $map->attribution,
     ),
     'show_disclaimer' => $map->show_disclaimer,
     'show_author' => $map->show_author,

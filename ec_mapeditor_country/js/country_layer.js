@@ -77,17 +77,6 @@ if (typeof Drupal.settings.country_layers !== 'undefined') {
     }
     var id = L.wt.countries([{"level": nuts_level, "countries": country_keys}], options);
 
-    // Adds layer attribution if set.
-    // @todo. attrib texts gets overwritten when multiple layers of same type.
-    if (typeof country_layers[i].layer_settings.attribution != 'undefined') {
-      if (country_layers[i].layer_settings.attribution.attributionControl == '1') {
-        var attribution = country_layers[i].layer_settings.attribution.attribution;
-        id.getAttribution = function () {
-          return window.attribution;
-        };
-      }
-    }
-
     // Collects the layers that are marked "enabled" to be activated in
     // map.js.
     if (typeof country_layers[i].layer_settings.control.enabled != 'undefined') {

@@ -441,10 +441,6 @@ class EcMapeditorLayerSettings {
         'show_in_control' => TRUE,
       ),
       'show_settings' => FALSE,
-      'attribution' => array(
-        'attributionControl' => FALSE,
-        'attribution' => NULL,
-      ),
       'style' => array(
         'fill_color' => '#C8E9F2',
         'fill_opacity' => 0.9,

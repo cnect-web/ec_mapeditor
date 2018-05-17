@@ -68,17 +68,6 @@ if (typeof Drupal.settings.csv_layers !== 'undefined') {
       }
     });
 
-    // Adds layer attribution if set.
-    // @todo. attrib texts gets overwritten when multiple layers of same type.
-    if (typeof csv_layers[i].layer_settings.attribution != 'undefined') {
-      if (csv_layers[i].layer_settings.attribution.attributionControl == '1') {
-        var attribution = csv_layers[i].layer_settings.attribution.attribution;
-        id.getAttribution = function () {
-          return window.attribution;
-        };
-      }
-    }
-
     // Collects the layers that are marked "enabled" to be activated in
     // map.js.
     if (typeof csv_layers[i].layer_settings.control.enabled != 'undefined') {

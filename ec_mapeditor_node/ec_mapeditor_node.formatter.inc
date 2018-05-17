@@ -28,7 +28,6 @@ function ec_mapeditor_node_field_formatter_info() {
         'zoom' => $settings['zoom'],
         'icon' => $settings['icon'],
         'center' => $settings['center'],
-        'attribution' => $settings['attribution'],
         'fields_in_popup' => $settings['fields_in_popup'],
       ),
     );
@@ -50,7 +49,6 @@ function ec_mapeditor_node_field_formatter_settings_form($field, $instance, $vie
     'zoom',
     'icon',
     'center',
-    'attributions',
     'fields_in_popup',
   );
   return _ec_mapeditor_custom_map_form_elements($elements, $settings);
@@ -181,7 +179,6 @@ function ec_mapeditor_node_field_formatter_view($entity_type, $entity, $field, $
 
       // Fetches map settings from display settings.
       $custom_map_settings = array(
-        'attribution' => $display['settings']['attribution'],
         'tiles' => $display['settings']['tiles'],
         'height' => $display['settings']['height'],
         'zoom' => $display['settings']['zoom'],

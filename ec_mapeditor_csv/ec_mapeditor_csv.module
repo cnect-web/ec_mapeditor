@@ -99,7 +99,7 @@ function ec_mapeditor_csv_features($data) {
 function ec_mapeditor_csv_layer_info() {
   return array(
     'csv_layer' => array(
-      'form_elements' => array('popup', 'clustering', 'icon', 'attribution'),
+      'form_elements' => array('popup', 'clustering', 'icon'),
       'custom_js' => base_path() . drupal_get_path('module', 'ec_mapeditor_csv') . "/js/csv_layer.js?v=" . rand(0, 33333),
     ),
   );

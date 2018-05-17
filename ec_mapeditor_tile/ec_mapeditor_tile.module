@@ -39,7 +39,7 @@ function ec_mapeditor_tile_layer_content_alter(&$content, $wrapper, $entity) {
 function ec_mapeditor_tile_layer_info() {
   return array(
     'tile_layer' => array(
-      'form_elements' => array('tiles', 'attribution'),
+      'form_elements' => array('tiles'),
       'custom_js' => base_path() . drupal_get_path('module', 'ec_mapeditor_tile') . "/js/tile_layer.js?v=" . rand(0, 33333),
     ),
   );
