@@ -31,12 +31,6 @@ L.custom = {
     // Creates the tile layer in the map.
     var options = [];
 
-    // Adds attribution if set.
-    // @todo fix attribution mess.
-    if (settings.attribution.attributionControl == 1) {
-      options.attribution = settings.attribution.attribution;
-    }
-
     // Hide Show disclaimer of the map.
     if (settings.show_disclaimer == '0') {
       document.getElementById('leaflet-disclaimer').style.display = 'none';
