@@ -544,10 +544,6 @@ class EcMapeditorMapSettings {
       'dragging' => TRUE,
       'touchZoom' => TRUE,
       'scrollWheelZoom' => TRUE,
-      'attribution' => array(
-        'attributionControl' => TRUE,
-        'attribution' => t('Map data by Eurostat and the European Commission'),
-      ),
       'zoom' => array(
         'initialZoom' => 4,
         'minZoom' => 2,
