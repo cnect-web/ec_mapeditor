@@ -513,10 +513,6 @@ function _ec_mapeditor_save_map($map) {
       'minZoom' => $map->minZoom,
       'maxZoom' => $map->maxZoom,
     ),
-    'attribution' => array(
-      'attributionControl' => $map->attributionControl,
-      'attribution' => $map->attribution,
-    ),
     'show_disclaimer' => $map->show_disclaimer,
     'show_author' => $map->show_author,
     'show_settings' => $map->show_settings,

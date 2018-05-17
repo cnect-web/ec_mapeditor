@@ -179,7 +179,6 @@ function ec_mapeditor_node_field_formatter_view($entity_type, $entity, $field, $
 
       // Fetches map settings from display settings.
       $custom_map_settings = array(
-        'attribution' => $display['settings']['attribution'],
         'tiles' => $display['settings']['tiles'],
         'height' => $display['settings']['height'],
         'zoom' => $display['settings']['zoom'],
