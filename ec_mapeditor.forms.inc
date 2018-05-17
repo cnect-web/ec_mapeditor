@@ -159,24 +159,6 @@ function _ec_mapeditor_form_elements($group, $settings, $options = NULL) {
         '#default_value' => isset($settings[$group]['cluster_markers']) ? $settings[$group]['cluster_markers'] : FALSE,
       );
       break;
-
-    case 'attribution':
-      $form_element = array(
-        '#type' => 'container',
-        '#weight' => 16,
-      );
-      $form_element['attributionControl'] = array(
-        '#type' => 'checkbox',
-        '#title' => t('Show attribution'),
-        '#default_value' => isset($settings[$group]['attributionControl']) ? $settings[$group]['attributionControl'] : TRUE,
-      );
-      $form_element['attribution'] = array(
-        '#type' => 'textfield',
-        '#title' => t('Attribution text'),
-        '#default_value' => isset($settings[$group]['attribution']) ? $settings[$group]['attribution'] : t('Map data by Eurostat and the European Commission'),
-        '#size' => 72,
-      );
-      break;
   }
   return $form_element;
 }

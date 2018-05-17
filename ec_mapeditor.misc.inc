@@ -84,7 +84,7 @@ function map_form($form, &$form_state, $map) {
   field_attach_form('map', $map, $form, $form_state);
 
   // Adds common map form elements.
-  $elements = array('height', 'center', 'zoom', 'tiles', 'attribution');
+  $elements = array('height', 'center', 'zoom', 'tiles');
   $custom_form_elements = _ec_mapeditor_custom_map_form_elements($elements, $settings);
   $form += $custom_form_elements;
 

@@ -82,7 +82,7 @@ function _ec_mapeditor_country_csv_countries($data) {
 function ec_mapeditor_country_layer_info() {
   return array(
     'country_layer' => array(
-      'form_elements' => array('style', 'nuts', 'attribution'),
+      'form_elements' => array('style', 'nuts'),
       'custom_js' => base_path() . drupal_get_path('module', 'ec_mapeditor_country') . "/js/country_layer.js?v=" . rand(0, 33333),
     ),
   );

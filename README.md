@@ -6,7 +6,7 @@ EC mapeditor provides functionality for creating maps with the webtools map Java
 It allows users to create a map in a familiar Drupal UI. You can add several layers in a map.
 
 ## Features
-* Creating maps with settings for tiles, height, center, zooming, marker bounding, attribution.
+* Creating maps with settings for tiles, height, center, zooming, marker bounding.
 * Creating map layer with data from different sources, with settings for marker color, layer switch control, popup behaviour, clustering.
 * Map field formatter to output geofields as a webtools Map
 * Admin UI for managing maps.
@@ -50,7 +50,7 @@ A couple of layer types (map layer bundles) will be included:
 * Enter a name and description for the map
 * Choose the map layer type and click _Add new entity_
 * Enter the map layer details (can be different for eacht map layer type)
-* Change the values for height, centering, zooming and attribution
+* Change the values for height, centering and zooming
 * Click _Save map_
 
 ## Using map as field formatter

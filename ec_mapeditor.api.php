@@ -26,7 +26,6 @@ function hook_layer_info() {
         'popup',
         'clustering',
         'icon',
-        'attribution',
         'user_picture_icon',
       ),
       'custom_js' => base_path(),

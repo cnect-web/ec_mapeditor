@@ -13,7 +13,6 @@ L.custom = {
     var map = L.map(obj, {
       "center": [48, 9],
       "zoom": 4,
-      "attributionControl": false,
       "loadingControl": true
     });
 
