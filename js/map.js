@@ -67,7 +67,7 @@ L.custom = {
       // Node and CSV layers are bound as a group.
       if (typeof group != 'undefined') {
 
-        map.fitBounds(group.getBounds(), {padding: [30, 30]});
+        map.fitBounds(group.getBounds(), {padding: [30, 30]}).setZoom(settings.zoom.initialZoom);
 
         // Bound markers when clicking on Home icon.
         document.getElementsByClassName('leaflet-home')[0].onclick = function () {
@@ -75,7 +75,7 @@ L.custom = {
         };
         // Bound markers when clicking on Popup Close icon.
         document.getElementsByClassName('leaflet-close')[0].addEventListener("click", function (e) {
-            map.fitBounds(group.getBounds(), {padding: [30, 30]});
+            map.fitBounds(group.getBounds(), {padding: [30, 30]}).setZoom(settings.zoom.initialZoom);
         }, false);
       }
 
@@ -84,7 +84,7 @@ L.custom = {
       if (typeof wt_bounds_group != 'undefined') {
         var arrayLength = wt_bounds_group.length;
         for (var i = 0; i < arrayLength; i++) {
-          wt_bounds_group[i].fitBounds();
+          wt_bounds_group[i].fitBounds().setZoom(settings.zoom.initialZoom);
         }
       }
     }
