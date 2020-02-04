@@ -147,15 +147,6 @@ class EcMapeditorMapBuild {
    */
   public function __construct($settings, $map = NULL) {
     $this->build = array();
-
-    // Loads map service via load.js (general JavaScript service).
-    $load_js = variable_get('ec_mapeditor_webtools_environment', EC_MAPEDITOR_WEBTOOLS_ENVIRONMENT);
-    $element = array(
-      '#type' => 'markup',
-      '#markup' => "<script async src='$load_js' type='text/javascript'></script>",
-    );
-    drupal_add_html_head($element, 'async_script');
-
     // Prepares general map definitions and settings for JavaScript usage.
     // @todo fix different usages of height.
     $this->build['#attached']['js'][] = array(

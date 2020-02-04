@@ -6,6 +6,7 @@ dependencies[] = ec_mapeditor_layer
 dependencies[] = views
 dependencies[] = inline_entity_form
 dependencies[] = entityreference
+dependencies[] = nexteuropa_webtools
 files[] = ec_mapeditor.controller.inc
 stylesheets[all][] = css/style.css
 multisite_version = 2.2
